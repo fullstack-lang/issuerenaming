@@ -9,8 +9,11 @@ Requirements:
  - node (version >= 18.xx)
 
 ```
+git clone https://github.com/fullstack-lang/issuerenaming
+cd issuerenaming
 cd ng
 npm i
+npm install -g @angular/cli@15
 ng build
 cd ../go/cmd/issuerenaming
 go build
