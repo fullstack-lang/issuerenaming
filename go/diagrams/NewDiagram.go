@@ -115,7 +115,7 @@ func NewDiagramInjection() {
 
 	// GongStructShape values setup
 	__GongStructShape__000000_NewDiagram_Foo.Name = `NewDiagram-Foo`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Foo]
@@ -128,7 +128,7 @@ func NewDiagramInjection() {
 
 	// GongStructShape values setup
 	__GongStructShape__000001_NewDiagram_Waldo.Name = `NewDiagram-Waldo`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Waldo]
@@ -141,8 +141,7 @@ func NewDiagramInjection() {
 
 	// Link values setup
 	__Link__000000_Waldos.Name = `Waldos`
-	__Link__000000_Waldos.Structname = `Foo`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Foo.Waldos]
@@ -153,7 +152,7 @@ func NewDiagramInjection() {
 
 	// NoteShape values setup
 	__NoteShape__000000_Note.Name = `Note`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Note]
@@ -170,7 +169,7 @@ related to [models.Waldo] throughs the field
 
 	// NoteShapeLink values setup
 	__NoteShapeLink__000000_Foo.Name = `Foo`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Foo]
@@ -179,7 +178,7 @@ related to [models.Waldo] throughs the field
 
 	// NoteShapeLink values setup
 	__NoteShapeLink__000001_Foo_Waldos.Name = `Foo.Waldos`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Foo.Waldos]
@@ -188,7 +187,7 @@ related to [models.Waldo] throughs the field
 
 	// NoteShapeLink values setup
 	__NoteShapeLink__000002_Waldo.Name = `Waldo`
-	
+
 	// comment added to overcome the problem with the comment map association
 
 	//gong:ident [ref_models.Waldo]
@@ -222,5 +221,3 @@ related to [models.Waldo] throughs the field
 	__NoteShape__000000_Note.NoteShapeLinks = append(__NoteShape__000000_Note.NoteShapeLinks, __NoteShapeLink__000001_Foo_Waldos)
 	__NoteShape__000000_Note.NoteShapeLinks = append(__NoteShape__000000_Note.NoteShapeLinks, __NoteShapeLink__000002_Waldo)
 }
-
-
