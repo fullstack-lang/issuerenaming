@@ -56,11 +56,22 @@ select `Foo` and rename it `Bar`
 check the diffs in stage.go & NewDiagram.go
 ## Re generation and running the application after renaming Foo to Bar
 
-You can regenerate the application or switch to branch "afterrenaming"
+You can regenerate the application
 
 ```
 go install github.com/fullstack-lang/gong/go/cmd/gongc@issuerenaming
 gongc go/models
+cd go/cmd/issuerenaming
+./issuerenaming -unmarshallFromCode=stage.go -marshallOnCommit=stage 
+```
+
+alternatively, you can swith to branch "afterrenaming" and rebuild the applicationo
+
+```
+cd ng
+ng build
+cd ../go/cmd/issuerenaming
+go build
 cd go/cmd/issuerenaming
 ./issuerenaming -unmarshallFromCode=stage.go -marshallOnCommit=stage 
 ```
