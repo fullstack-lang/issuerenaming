@@ -22,6 +22,16 @@ go build
 ./issuerenaming -unmarshallFromCode=stage.go -marshallOnCommit=stage 
 ```
 
+## navigating to the application
+
+with a navigator (for unknown reasons, it does not work with firefox on mac), navigate to http://localhost:8080/.
+
+then navigate to the display of the UML diagram by clicking on the `Diagrams view` then select `New Diagram`.
+
+You should see
+
+<img width="762" alt="Screenshot 2023-02-09 at 08 14 49" src="./UML diagram before renaming.png">
+
 ## Persistance of data in go code
 
 https://github.com/fullstack-lang/issuerenaming/blob/main/go/cmd/issuerenaming/stage.go
