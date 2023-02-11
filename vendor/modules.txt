@@ -41,7 +41,7 @@ github.com/fullstack-lang/gong/go/fullstack
 github.com/fullstack-lang/gong/go/models
 github.com/fullstack-lang/gong/go/orm
 github.com/fullstack-lang/gong/ng/projects
-# github.com/fullstack-lang/gongdoc v0.0.0-20230208164901-aa108920c682
+# github.com/fullstack-lang/gongdoc v0.0.0-20230211100956-511156fd4f98
 ## explicit; go 1.19
 github.com/fullstack-lang/gongdoc/go/controllers
 github.com/fullstack-lang/gongdoc/go/fullstack

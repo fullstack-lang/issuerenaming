@@ -17,6 +17,7 @@ import { shapeIdentifierToShapeName } from './shape-identifier-to-shape-name';
 import { informBackEndOfSelection } from './on-pointer-down-function';
 import { ClassdiagramDB } from 'gongdoc';
 import { newUmlClassShapeFromGongEnumShape } from './newUmlClassShapeFromGongEnumShape';
+import { IdentifierToReceiverAndFieldName } from './identifier-function';
 
 @Component({
   selector: 'lib-class-diagram',
@@ -246,7 +247,10 @@ export class ClassDiagramComponent implements OnInit, OnDestroy {
             // does from & to shapes exists?
             //
             // a gong st
-            var fromShape = this.Map_GongStructName_JointjsUMLClassShape.get(linkDB.Structname)
+
+            let id: { receiver: string, fieldName: string }
+            id = IdentifierToReceiverAndFieldName(linkDB.Identifier)
+            var fromShape = this.Map_GongStructName_JointjsUMLClassShape.get(id.receiver)
             var toShape = this.Map_GongStructName_JointjsUMLClassShape.get(linkDB.Fieldtypename)
 
             var strockWidth = 2
@@ -327,7 +331,7 @@ export class ClassDiagramComponent implements OnInit, OnDestroy {
               // add a backbone event handler to update the position
               link.on('change:vertices', onLinkMove)
 
-              this.Map_GongStructName_Joint_shapes_standard_Link.set(linkDB.Structname + "." + linkDB.Name, link)
+              this.Map_GongStructName_Joint_shapes_standard_Link.set(id.receiver + "." + linkDB.Name, link)
 
               link.addTo(this.graph);
             }
@@ -364,6 +368,11 @@ export class ClassDiagramComponent implements OnInit, OnDestroy {
 
               case gongdoc.NoteShapeLinkType.NOTE_SHAPE_LINK_TO_GONG_STRUCT_OR_ENUM_SHAPE: {
                 var toShape = this.Map_GongStructName_JointjsUMLClassShape.get(noteShapeLink.Name)
+
+                if (toShape == undefined) {
+                  console.log("target shape not found: " + noteShapeLink.Name)
+                  continue
+                }
                 let xTo = toShape!.get('position')!.x
                 let yTo = toShape!.get('position')!.y
                 var strockWidth = 1

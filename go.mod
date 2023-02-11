@@ -3,7 +3,7 @@ module github.com/fullstack-lang/issuerenaming
 go 1.19
 
 require (
-	github.com/fullstack-lang/gongdoc v0.0.0-20230208164901-aa108920c682
+	github.com/fullstack-lang/gongdoc v0.0.0-20230211100956-511156fd4f98
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.8.2
