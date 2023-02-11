@@ -71,9 +71,9 @@ export class WaldosTableComponent implements OnInit {
         case 'Name':
           return waldoDB.Name;
 
-        case 'Foo_Waldos':
-          if (this.frontRepo.Foos.get(waldoDB.Foo_WaldosDBID.Int64) != undefined) {
-            return this.frontRepo.Foos.get(waldoDB.Foo_WaldosDBID.Int64)!.Name
+        case 'Bar_Waldos':
+          if (this.frontRepo.Bars.get(waldoDB.Bar_WaldosDBID.Int64) != undefined) {
+            return this.frontRepo.Bars.get(waldoDB.Bar_WaldosDBID.Int64)!.Name
           } else {
             return ""
           }
@@ -93,8 +93,8 @@ export class WaldosTableComponent implements OnInit {
 
       // insertion point for merging of fields
       mergedContent += waldoDB.Name.toLowerCase()
-      if (waldoDB.Foo_WaldosDBID.Int64 != 0) {
-        mergedContent += this.frontRepo.Foos.get(waldoDB.Foo_WaldosDBID.Int64)!.Name.toLowerCase()
+      if (waldoDB.Bar_WaldosDBID.Int64 != 0) {
+        mergedContent += this.frontRepo.Bars.get(waldoDB.Bar_WaldosDBID.Int64)!.Name.toLowerCase()
       }
 
 
@@ -148,12 +148,12 @@ export class WaldosTableComponent implements OnInit {
     if (this.mode == TableComponentMode.DISPLAY_MODE) {
       this.displayedColumns = ['ID', 'Delete', // insertion point for columns to display
         "Name",
-        "Foo_Waldos",
+        "Bar_Waldos",
       ]
     } else {
       this.displayedColumns = ['select', 'ID', // insertion point for columns to display
         "Name",
-        "Foo_Waldos",
+        "Bar_Waldos",
       ]
       this.selection = new SelectionModel<WaldoDB>(allowMultiSelect, this.initialSelection);
     }

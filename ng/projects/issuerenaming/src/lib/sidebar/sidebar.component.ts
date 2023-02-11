@@ -11,8 +11,8 @@ import { CommitNbFromBackService } from '../commitnbfromback.service'
 import { GongstructSelectionService } from '../gongstruct-selection.service'
 
 // insertion point for per struct import code
-import { FooService } from '../foo.service'
-import { getFooUniqueID } from '../front-repo.service'
+import { BarService } from '../bar.service'
+import { getBarUniqueID } from '../front-repo.service'
 import { WaldoService } from '../waldo.service'
 import { getWaldoUniqueID } from '../front-repo.service'
 
@@ -157,7 +157,7 @@ export class SidebarComponent implements OnInit {
     private gongstructSelectionService: GongstructSelectionService,
 
     // insertion point for per struct service declaration
-    private fooService: FooService,
+    private barService: BarService,
     private waldoService: WaldoService,
   ) { }
 
@@ -187,7 +187,7 @@ export class SidebarComponent implements OnInit {
 
     // insertion point for per struct observable for refresh trigger
     // observable for changes in structs
-    this.fooService.FooServiceChanged.subscribe(
+    this.barService.BarServiceChanged.subscribe(
       message => {
         if (message == "post" || message == "update" || message == "delete") {
           this.refresh()
@@ -227,22 +227,22 @@ export class SidebarComponent implements OnInit {
 
       // insertion point for per struct tree construction
       /**
-      * fill up the Foo part of the mat tree
+      * fill up the Bar part of the mat tree
       */
-      let fooGongNodeStruct: GongNode = {
-        name: "Foo",
+      let barGongNodeStruct: GongNode = {
+        name: "Bar",
         type: GongNodeType.STRUCT,
         id: 0,
         uniqueIdPerStack: 13 * nonInstanceNodeId,
-        structName: "Foo",
+        structName: "Bar",
         associationField: "",
         associatedStructName: "",
         children: new Array<GongNode>()
       }
       nonInstanceNodeId = nonInstanceNodeId + 1
-      this.gongNodeTree.push(fooGongNodeStruct)
+      this.gongNodeTree.push(barGongNodeStruct)
 
-      this.frontRepo.Foos_array.sort((t1, t2) => {
+      this.frontRepo.Bars_array.sort((t1, t2) => {
         if (t1.Name > t2.Name) {
           return 1;
         }
@@ -252,19 +252,19 @@ export class SidebarComponent implements OnInit {
         return 0;
       });
 
-      this.frontRepo.Foos_array.forEach(
-        fooDB => {
-          let fooGongNodeInstance: GongNode = {
-            name: fooDB.Name,
+      this.frontRepo.Bars_array.forEach(
+        barDB => {
+          let barGongNodeInstance: GongNode = {
+            name: barDB.Name,
             type: GongNodeType.INSTANCE,
-            id: fooDB.ID,
-            uniqueIdPerStack: getFooUniqueID(fooDB.ID),
-            structName: "Foo",
+            id: barDB.ID,
+            uniqueIdPerStack: getBarUniqueID(barDB.ID),
+            structName: "Bar",
             associationField: "",
             associatedStructName: "",
             children: new Array<GongNode>()
           }
-          fooGongNodeStruct.children!.push(fooGongNodeInstance)
+          barGongNodeStruct.children!.push(barGongNodeInstance)
 
           // insertion point for per field code
           /**
@@ -273,23 +273,23 @@ export class SidebarComponent implements OnInit {
           let WaldosGongNodeAssociation: GongNode = {
             name: "(Waldo) Waldos",
             type: GongNodeType.ONE__ZERO_MANY_ASSOCIATION,
-            id: fooDB.ID,
+            id: barDB.ID,
             uniqueIdPerStack: 19 * nonInstanceNodeId,
-            structName: "Foo",
+            structName: "Bar",
             associationField: "Waldos",
             associatedStructName: "Waldo",
             children: new Array<GongNode>()
           }
           nonInstanceNodeId = nonInstanceNodeId + 1
-          fooGongNodeInstance.children.push(WaldosGongNodeAssociation)
+          barGongNodeInstance.children.push(WaldosGongNodeAssociation)
 
-          fooDB.Waldos?.forEach(waldoDB => {
+          barDB.Waldos?.forEach(waldoDB => {
             let waldoNode: GongNode = {
               name: waldoDB.Name,
               type: GongNodeType.INSTANCE,
               id: waldoDB.ID,
               uniqueIdPerStack: // godel numbering (thank you kurt)
-                7 * getFooUniqueID(fooDB.ID)
+                7 * getBarUniqueID(barDB.ID)
                 + 11 * getWaldoUniqueID(waldoDB.ID),
               structName: "Waldo",
               associationField: "",

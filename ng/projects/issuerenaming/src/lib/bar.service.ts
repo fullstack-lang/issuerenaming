@@ -11,14 +11,14 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { FooDB } from './foo-db';
+import { BarDB } from './bar-db';
 
 // insertion point for imports
 
 @Injectable({
   providedIn: 'root'
 })
-export class FooService {
+export class BarService {
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -26,9 +26,9 @@ export class FooService {
 
   // Kamar Raïmo: Adding a way to communicate between components that share information
   // so that they are notified of a change.
-  FooServiceChanged: BehaviorSubject<string> = new BehaviorSubject("");
+  BarServiceChanged: BehaviorSubject<string> = new BehaviorSubject("");
 
-  private foosUrl: string
+  private barsUrl: string
 
   constructor(
     private http: HttpClient,
@@ -43,69 +43,69 @@ export class FooService {
     origin = origin.replace("4200", "8080")
 
     // compute path to the service
-    this.foosUrl = origin + '/api/github.com/fullstack-lang/issuerenaming/go/v1/foos';
+    this.barsUrl = origin + '/api/github.com/fullstack-lang/issuerenaming/go/v1/bars';
   }
 
-  /** GET foos from the server */
-  getFoos(): Observable<FooDB[]> {
-    return this.http.get<FooDB[]>(this.foosUrl)
+  /** GET bars from the server */
+  getBars(): Observable<BarDB[]> {
+    return this.http.get<BarDB[]>(this.barsUrl)
       .pipe(
-        tap(_ => this.log('fetched foos')),
-        catchError(this.handleError<FooDB[]>('getFoos', []))
+        tap(_ => this.log('fetched bars')),
+        catchError(this.handleError<BarDB[]>('getBars', []))
       );
   }
 
-  /** GET foo by id. Will 404 if id not found */
-  getFoo(id: number): Observable<FooDB> {
-    const url = `${this.foosUrl}/${id}`;
-    return this.http.get<FooDB>(url).pipe(
-      tap(_ => this.log(`fetched foo id=${id}`)),
-      catchError(this.handleError<FooDB>(`getFoo id=${id}`))
+  /** GET bar by id. Will 404 if id not found */
+  getBar(id: number): Observable<BarDB> {
+    const url = `${this.barsUrl}/${id}`;
+    return this.http.get<BarDB>(url).pipe(
+      tap(_ => this.log(`fetched bar id=${id}`)),
+      catchError(this.handleError<BarDB>(`getBar id=${id}`))
     );
   }
 
   //////// Save methods //////////
 
-  /** POST: add a new foo to the server */
-  postFoo(foodb: FooDB): Observable<FooDB> {
+  /** POST: add a new bar to the server */
+  postBar(bardb: BarDB): Observable<BarDB> {
 
     // insertion point for reset of pointers and reverse pointers (to avoid circular JSON)
-    foodb.Waldos = []
+    bardb.Waldos = []
 
-    return this.http.post<FooDB>(this.foosUrl, foodb, this.httpOptions).pipe(
+    return this.http.post<BarDB>(this.barsUrl, bardb, this.httpOptions).pipe(
       tap(_ => {
         // insertion point for restoration of reverse pointers
-        this.log(`posted foodb id=${foodb.ID}`)
+        this.log(`posted bardb id=${bardb.ID}`)
       }),
-      catchError(this.handleError<FooDB>('postFoo'))
+      catchError(this.handleError<BarDB>('postBar'))
     );
   }
 
-  /** DELETE: delete the foodb from the server */
-  deleteFoo(foodb: FooDB | number): Observable<FooDB> {
-    const id = typeof foodb === 'number' ? foodb : foodb.ID;
-    const url = `${this.foosUrl}/${id}`;
+  /** DELETE: delete the bardb from the server */
+  deleteBar(bardb: BarDB | number): Observable<BarDB> {
+    const id = typeof bardb === 'number' ? bardb : bardb.ID;
+    const url = `${this.barsUrl}/${id}`;
 
-    return this.http.delete<FooDB>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted foodb id=${id}`)),
-      catchError(this.handleError<FooDB>('deleteFoo'))
+    return this.http.delete<BarDB>(url, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted bardb id=${id}`)),
+      catchError(this.handleError<BarDB>('deleteBar'))
     );
   }
 
-  /** PUT: update the foodb on the server */
-  updateFoo(foodb: FooDB): Observable<FooDB> {
-    const id = typeof foodb === 'number' ? foodb : foodb.ID;
-    const url = `${this.foosUrl}/${id}`;
+  /** PUT: update the bardb on the server */
+  updateBar(bardb: BarDB): Observable<BarDB> {
+    const id = typeof bardb === 'number' ? bardb : bardb.ID;
+    const url = `${this.barsUrl}/${id}`;
 
     // insertion point for reset of pointers and reverse pointers (to avoid circular JSON)
-    foodb.Waldos = []
+    bardb.Waldos = []
 
-    return this.http.put<FooDB>(url, foodb, this.httpOptions).pipe(
+    return this.http.put<BarDB>(url, bardb, this.httpOptions).pipe(
       tap(_ => {
         // insertion point for restoration of reverse pointers
-        this.log(`updated foodb id=${foodb.ID}`)
+        this.log(`updated bardb id=${bardb.ID}`)
       }),
-      catchError(this.handleError<FooDB>('updateFoo'))
+      catchError(this.handleError<BarDB>('updateBar'))
     );
   }
 

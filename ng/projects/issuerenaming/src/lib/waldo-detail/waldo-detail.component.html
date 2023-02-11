@@ -22,11 +22,11 @@
     </mat-form-field>
 
     <mat-form-field class="detail-full-width">
-        <mat-label>(Foo) Waldos</mat-label>
-        <mat-select [compareWith]="compareObjects" [(ngModel)]="waldo.Foo_Waldos_reverse" [ngModelOptions]="{standalone: true}">
+        <mat-label>(Bar) Waldos</mat-label>
+        <mat-select [compareWith]="compareObjects" [(ngModel)]="waldo.Bar_Waldos_reverse" [ngModelOptions]="{standalone: true}">
             <mat-option>None</mat-option>
-            <mat-option *ngFor="let foo of frontRepo.Foos_array" [value]="foo">
-                {{foo.Name}}
+            <mat-option *ngFor="let bar of frontRepo.Bars_array" [value]="bar">
+                {{bar.Name}}
             </mat-option>
         </mat-select>
     </mat-form-field>

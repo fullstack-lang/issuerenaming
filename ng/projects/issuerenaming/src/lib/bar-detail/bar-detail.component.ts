@@ -2,8 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 
-import { FooDB } from '../foo-db'
-import { FooService } from '../foo.service'
+import { BarDB } from '../bar-db'
+import { BarService } from '../bar.service'
 
 import { FrontRepoService, FrontRepo, SelectionMode, DialogData } from '../front-repo.service'
 import { MapOfComponents } from '../map-components'
@@ -17,25 +17,25 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogConfig } from '@angu
 
 import { NullInt64 } from '../null-int64'
 
-// FooDetailComponent is initilizaed from different routes
-// FooDetailComponentState detail different cases 
-enum FooDetailComponentState {
+// BarDetailComponent is initilizaed from different routes
+// BarDetailComponentState detail different cases 
+enum BarDetailComponentState {
 	CREATE_INSTANCE,
 	UPDATE_INSTANCE,
 	// insertion point for declarations of enum values of state
 }
 
 @Component({
-	selector: 'app-foo-detail',
-	templateUrl: './foo-detail.component.html',
-	styleUrls: ['./foo-detail.component.css'],
+	selector: 'app-bar-detail',
+	templateUrl: './bar-detail.component.html',
+	styleUrls: ['./bar-detail.component.css'],
 })
-export class FooDetailComponent implements OnInit {
+export class BarDetailComponent implements OnInit {
 
 	// insertion point for declarations
 
-	// the FooDB of interest
-	foo: FooDB = new FooDB
+	// the BarDB of interest
+	bar: BarDB = new BarDB
 
 	// front repo
 	frontRepo: FrontRepo = new FrontRepo
@@ -46,7 +46,7 @@ export class FooDetailComponent implements OnInit {
 	mapFields_displayAsTextArea = new Map<string, boolean>()
 
 	// the state at initialization (CREATION, UPDATE or CREATE with one association set)
-	state: FooDetailComponentState = FooDetailComponentState.CREATE_INSTANCE
+	state: BarDetailComponentState = BarDetailComponentState.CREATE_INSTANCE
 
 	// in UDPATE state, if is the id of the instance to update
 	// in CREATE state with one association set, this is the id of the associated instance
@@ -57,7 +57,7 @@ export class FooDetailComponent implements OnInit {
 	originStructFieldName: string = ""
 
 	constructor(
-		private fooService: FooService,
+		private barService: BarService,
 		private frontRepoService: FrontRepoService,
 		public dialog: MatDialog,
 		private activatedRoute: ActivatedRoute,
@@ -79,10 +79,10 @@ export class FooDetailComponent implements OnInit {
 
 		const association = this.activatedRoute.snapshot.paramMap.get('association');
 		if (this.id == 0) {
-			this.state = FooDetailComponentState.CREATE_INSTANCE
+			this.state = BarDetailComponentState.CREATE_INSTANCE
 		} else {
 			if (this.originStruct == undefined) {
-				this.state = FooDetailComponentState.UPDATE_INSTANCE
+				this.state = BarDetailComponentState.UPDATE_INSTANCE
 			} else {
 				switch (this.originStructFieldName) {
 					// insertion point for state computation
@@ -92,13 +92,13 @@ export class FooDetailComponent implements OnInit {
 			}
 		}
 
-		this.getFoo()
+		this.getBar()
 
 		// observable for changes in structs
-		this.fooService.FooServiceChanged.subscribe(
+		this.barService.BarServiceChanged.subscribe(
 			message => {
 				if (message == "post" || message == "update" || message == "delete") {
-					this.getFoo()
+					this.getBar()
 				}
 			}
 		)
@@ -106,20 +106,20 @@ export class FooDetailComponent implements OnInit {
 		// insertion point for initialisation of enums list
 	}
 
-	getFoo(): void {
+	getBar(): void {
 
 		this.frontRepoService.pull().subscribe(
 			frontRepo => {
 				this.frontRepo = frontRepo
 
 				switch (this.state) {
-					case FooDetailComponentState.CREATE_INSTANCE:
-						this.foo = new (FooDB)
+					case BarDetailComponentState.CREATE_INSTANCE:
+						this.bar = new (BarDB)
 						break;
-					case FooDetailComponentState.UPDATE_INSTANCE:
-						let foo = frontRepo.Foos.get(this.id)
-						console.assert(foo != undefined, "missing foo with id:" + this.id)
-						this.foo = foo!
+					case BarDetailComponentState.UPDATE_INSTANCE:
+						let bar = frontRepo.Bars.get(this.id)
+						console.assert(bar != undefined, "missing bar with id:" + this.id)
+						this.bar = bar!
 						break;
 					// insertion point for init of association field
 					default:
@@ -145,16 +145,16 @@ export class FooDetailComponent implements OnInit {
 		// insertion point for translation/nullation of each pointers
 
 		switch (this.state) {
-			case FooDetailComponentState.UPDATE_INSTANCE:
-				this.fooService.updateFoo(this.foo)
-					.subscribe(foo => {
-						this.fooService.FooServiceChanged.next("update")
+			case BarDetailComponentState.UPDATE_INSTANCE:
+				this.barService.updateBar(this.bar)
+					.subscribe(bar => {
+						this.barService.BarServiceChanged.next("update")
 					});
 				break;
 			default:
-				this.fooService.postFoo(this.foo).subscribe(foo => {
-					this.fooService.FooServiceChanged.next("post")
-					this.foo = new (FooDB) // reset fields
+				this.barService.postBar(this.bar).subscribe(bar => {
+					this.barService.BarServiceChanged.next("post")
+					this.bar = new (BarDB) // reset fields
 				});
 		}
 	}
@@ -177,7 +177,7 @@ export class FooDetailComponent implements OnInit {
 		dialogConfig.height = "50%"
 		if (selectionMode == SelectionMode.ONE_MANY_ASSOCIATION_MODE) {
 
-			dialogData.ID = this.foo.ID!
+			dialogData.ID = this.bar.ID!
 			dialogData.ReversePointer = reverseField
 			dialogData.OrderingMode = false
 			dialogData.SelectionMode = selectionMode
@@ -193,13 +193,13 @@ export class FooDetailComponent implements OnInit {
 			});
 		}
 		if (selectionMode == SelectionMode.MANY_MANY_ASSOCIATION_MODE) {
-			dialogData.ID = this.foo.ID!
+			dialogData.ID = this.bar.ID!
 			dialogData.ReversePointer = reverseField
 			dialogData.OrderingMode = false
 			dialogData.SelectionMode = selectionMode
 
 			// set up the source
-			dialogData.SourceStruct = "Foo"
+			dialogData.SourceStruct = "Bar"
 			dialogData.SourceField = sourceField
 
 			// set up the intermediate struct
@@ -229,7 +229,7 @@ export class FooDetailComponent implements OnInit {
 		// dialogConfig.disableClose = true;
 		dialogConfig.autoFocus = true;
 		dialogConfig.data = {
-			ID: this.foo.ID,
+			ID: this.bar.ID,
 			ReversePointer: reverseField,
 			OrderingMode: true,
 		};
@@ -245,8 +245,8 @@ export class FooDetailComponent implements OnInit {
 	}
 
 	fillUpNameIfEmpty(event: { value: { Name: string; }; }) {
-		if (this.foo.Name == "") {
-			this.foo.Name = event.value.Name
+		if (this.bar.Name == "") {
+			this.bar.Name = event.value.Name
 		}
 	}
 

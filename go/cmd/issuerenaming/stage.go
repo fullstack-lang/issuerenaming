@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/fullstack-lang/issuerenaming/go/models"
-
 	// injection point for ident package import declaration{{ImportPackageDeclaration}}
 )
 
@@ -39,7 +38,7 @@ func stageInjection() {
 	// Declaration of instances to stage
 
 	// Declarations of staged instances of Foo
-	__Foo__000000_A := (&models.Foo{Name: `A`}).Stage()
+	__Foo__000000_A := (&models.Bar{Name: `A`}).Stage()
 
 	// Declarations of staged instances of Waldo
 	__Waldo__000000_B := (&models.Waldo{Name: `B`}).Stage()
@@ -55,5 +54,3 @@ func stageInjection() {
 	// Setup of pointers
 	__Foo__000000_A.Waldos = append(__Foo__000000_A.Waldos, __Waldo__000000_B)
 }
-
-

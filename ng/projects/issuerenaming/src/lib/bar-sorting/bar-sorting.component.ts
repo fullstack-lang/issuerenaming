@@ -8,30 +8,30 @@ import { DialogData } from '../front-repo.service'
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { Router, RouterState } from '@angular/router';
-import { FooDB } from '../foo-db'
-import { FooService } from '../foo.service'
+import { BarDB } from '../bar-db'
+import { BarService } from '../bar.service'
 
 import { FrontRepoService, FrontRepo } from '../front-repo.service'
 import { NullInt64 } from '../null-int64'
 
 @Component({
-  selector: 'lib-foo-sorting',
-  templateUrl: './foo-sorting.component.html',
-  styleUrls: ['./foo-sorting.component.css']
+  selector: 'lib-bar-sorting',
+  templateUrl: './bar-sorting.component.html',
+  styleUrls: ['./bar-sorting.component.css']
 })
-export class FooSortingComponent implements OnInit {
+export class BarSortingComponent implements OnInit {
 
   frontRepo: FrontRepo = new (FrontRepo)
 
-  // array of Foo instances that are in the association
-  associatedFoos = new Array<FooDB>();
+  // array of Bar instances that are in the association
+  associatedBars = new Array<BarDB>();
 
   constructor(
-    private fooService: FooService,
+    private barService: BarService,
     private frontRepoService: FrontRepoService,
 
-    // not null if the component is called as a selection component of foo instances
-    public dialogRef: MatDialogRef<FooSortingComponent>,
+    // not null if the component is called as a selection component of bar instances
+    public dialogRef: MatDialogRef<BarSortingComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: DialogData,
 
     private router: Router,
@@ -42,31 +42,31 @@ export class FooSortingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getFoos()
+    this.getBars()
   }
 
-  getFoos(): void {
+  getBars(): void {
     this.frontRepoService.pull().subscribe(
       frontRepo => {
         this.frontRepo = frontRepo
 
         let index = 0
-        for (let foo of this.frontRepo.Foos_array) {
+        for (let bar of this.frontRepo.Bars_array) {
           let ID = this.dialogData.ID
-          let revPointerID = foo[this.dialogData.ReversePointer as keyof FooDB] as unknown as NullInt64
-          let revPointerID_Index = foo[this.dialogData.ReversePointer + "_Index" as keyof FooDB] as unknown as NullInt64
+          let revPointerID = bar[this.dialogData.ReversePointer as keyof BarDB] as unknown as NullInt64
+          let revPointerID_Index = bar[this.dialogData.ReversePointer + "_Index" as keyof BarDB] as unknown as NullInt64
           if (revPointerID.Int64 == ID) {
             if (revPointerID_Index == undefined) {
               revPointerID_Index = new NullInt64
               revPointerID_Index.Valid = true
               revPointerID_Index.Int64 = index++
             }
-            this.associatedFoos.push(foo)
+            this.associatedBars.push(bar)
           }
         }
 
-        // sort associated foo according to order
-        this.associatedFoos.sort((t1, t2) => {
+        // sort associated bar according to order
+        this.associatedBars.sort((t1, t2) => {
           let t1_revPointerID_Index = t1[this.dialogData.ReversePointer + "_Index" as keyof typeof t1] as unknown as NullInt64
           let t2_revPointerID_Index = t2[this.dialogData.ReversePointer + "_Index" as keyof typeof t2] as unknown as NullInt64
           if (t1_revPointerID_Index && t2_revPointerID_Index) {
@@ -84,13 +84,13 @@ export class FooSortingComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.associatedFoos, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.associatedBars, event.previousIndex, event.currentIndex);
 
-    // set the order of Foo instances
+    // set the order of Bar instances
     let index = 0
 
-    for (let foo of this.associatedFoos) {
-      let revPointerID_Index = foo[this.dialogData.ReversePointer + "_Index" as keyof FooDB] as unknown as NullInt64
+    for (let bar of this.associatedBars) {
+      let revPointerID_Index = bar[this.dialogData.ReversePointer + "_Index" as keyof BarDB] as unknown as NullInt64
       revPointerID_Index.Valid = true
       revPointerID_Index.Int64 = index++
     }
@@ -98,11 +98,11 @@ export class FooSortingComponent implements OnInit {
 
   save() {
 
-    this.associatedFoos.forEach(
-      foo => {
-        this.fooService.updateFoo(foo)
-          .subscribe(foo => {
-            this.fooService.FooServiceChanged.next("update")
+    this.associatedBars.forEach(
+      bar => {
+        this.barService.updateBar(bar)
+          .subscribe(bar => {
+            this.barService.BarServiceChanged.next("update")
           });
       }
     )

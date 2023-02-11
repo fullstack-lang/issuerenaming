@@ -1,11 +1,11 @@
-<form *ngIf="foo" class="details">
-    <h2 class="details__title">foo</h2>
+<form *ngIf="bar" class="details">
+    <h2 class="details__title">bar</h2>
     <!-- insertion point for fields specific code -->
     <mat-grid-list *ngIf='!isATextArea("Name")' cols="5" rowHeight="1:1">
         <mat-grid-tile [colspan]="3">
             <mat-form-field mat-form-field class="detail-full-width">
                 <mat-label>Name</mat-label>
-                <input name="" [ngModelOptions]="{standalone: true}" matInput [(ngModel)]="foo.Name">
+                <input name="" [ngModelOptions]="{standalone: true}" matInput [(ngModel)]="bar.Name">
             </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile>
@@ -18,16 +18,16 @@
     </mat-grid-list>
     <mat-form-field *ngIf='isATextArea("Name")' mat-form-field class="detail-full-width">
         <mat-label>Name</mat-label>
-        <textarea name="" [ngModelOptions]="{standalone: true}" matInput [(ngModel)]="foo.Name"></textarea>
+        <textarea name="" [ngModelOptions]="{standalone: true}" matInput [(ngModel)]="bar.Name"></textarea>
     </mat-form-field>
 
     <mat-grid-list cols="5" rowHeight="2:1">
         <mat-grid-tile [colspan]="3">
-            <button mat-raised-button (click)="openReverseSelection('Waldo', 'Foo_WaldosDBID', 'ONE_MANY_ASSOCIATION_MODE', '', '', '')">Waldos</button>
+            <button mat-raised-button (click)="openReverseSelection('Waldo', 'Bar_WaldosDBID', 'ONE_MANY_ASSOCIATION_MODE', '', '', '')">Waldos</button>
         </mat-grid-tile>
         <!-- insertion point for the button of the MANY_MANY association-->
         <mat-grid-tile>
-            <button mat-raised-button (click)="openDragAndDropOrdering('Waldo', 'Foo_WaldosDBID')">
+            <button mat-raised-button (click)="openDragAndDropOrdering('Waldo', 'Bar_WaldosDBID')">
                 <mat-icon>
                     shuffle
                 </mat-icon>
@@ -36,7 +36,7 @@
     </mat-grid-list>
     <div class="details__save">
         <button mat-raised-button color="primary" (click)="save()">
-            Save foo
+            Save bar
         </button>
     </div>
 </form>

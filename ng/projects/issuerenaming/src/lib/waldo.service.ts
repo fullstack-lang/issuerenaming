@@ -14,7 +14,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { WaldoDB } from './waldo-db';
 
 // insertion point for imports
-import { FooDB } from './foo-db'
+import { BarDB } from './bar-db'
 
 @Injectable({
   providedIn: 'root'
@@ -71,13 +71,13 @@ export class WaldoService {
   postWaldo(waldodb: WaldoDB): Observable<WaldoDB> {
 
     // insertion point for reset of pointers and reverse pointers (to avoid circular JSON)
-    let _Foo_Waldos_reverse = waldodb.Foo_Waldos_reverse
-    waldodb.Foo_Waldos_reverse = new FooDB
+    let _Bar_Waldos_reverse = waldodb.Bar_Waldos_reverse
+    waldodb.Bar_Waldos_reverse = new BarDB
 
     return this.http.post<WaldoDB>(this.waldosUrl, waldodb, this.httpOptions).pipe(
       tap(_ => {
         // insertion point for restoration of reverse pointers
-        waldodb.Foo_Waldos_reverse = _Foo_Waldos_reverse
+        waldodb.Bar_Waldos_reverse = _Bar_Waldos_reverse
         this.log(`posted waldodb id=${waldodb.ID}`)
       }),
       catchError(this.handleError<WaldoDB>('postWaldo'))
@@ -101,13 +101,13 @@ export class WaldoService {
     const url = `${this.waldosUrl}/${id}`;
 
     // insertion point for reset of pointers and reverse pointers (to avoid circular JSON)
-    let _Foo_Waldos_reverse = waldodb.Foo_Waldos_reverse
-    waldodb.Foo_Waldos_reverse = new FooDB
+    let _Bar_Waldos_reverse = waldodb.Bar_Waldos_reverse
+    waldodb.Bar_Waldos_reverse = new BarDB
 
     return this.http.put<WaldoDB>(url, waldodb, this.httpOptions).pipe(
       tap(_ => {
         // insertion point for restoration of reverse pointers
-        waldodb.Foo_Waldos_reverse = _Foo_Waldos_reverse
+        waldodb.Bar_Waldos_reverse = _Bar_Waldos_reverse
         this.log(`updated waldodb id=${waldodb.ID}`)
       }),
       catchError(this.handleError<WaldoDB>('updateWaldo'))

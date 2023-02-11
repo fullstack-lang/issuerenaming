@@ -107,34 +107,34 @@ func (stage *StageStruct) Marshall(file *os.File, modelsPackageName, packageName
 	setValueField := ""
 
 	// insertion initialization of objects to stage
-	map_Foo_Identifiers := make(map[*Foo]string)
-	_ = map_Foo_Identifiers
+	map_Bar_Identifiers := make(map[*Bar]string)
+	_ = map_Bar_Identifiers
 
-	fooOrdered := []*Foo{}
-	for foo := range stage.Foos {
-		fooOrdered = append(fooOrdered, foo)
+	barOrdered := []*Bar{}
+	for bar := range stage.Bars {
+		barOrdered = append(barOrdered, bar)
 	}
-	sort.Slice(fooOrdered[:], func(i, j int) bool {
-		return fooOrdered[i].Name < fooOrdered[j].Name
+	sort.Slice(barOrdered[:], func(i, j int) bool {
+		return barOrdered[i].Name < barOrdered[j].Name
 	})
-	identifiersDecl += "\n\n	// Declarations of staged instances of Foo"
-	for idx, foo := range fooOrdered {
+	identifiersDecl += "\n\n	// Declarations of staged instances of Bar"
+	for idx, bar := range barOrdered {
 
-		id = generatesIdentifier("Foo", idx, foo.Name)
-		map_Foo_Identifiers[foo] = id
+		id = generatesIdentifier("Bar", idx, bar.Name)
+		map_Bar_Identifiers[bar] = id
 
 		decl = IdentifiersDecls
 		decl = strings.ReplaceAll(decl, "{{Identifier}}", id)
-		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "Foo")
-		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", foo.Name)
+		decl = strings.ReplaceAll(decl, "{{GeneratedStructName}}", "Bar")
+		decl = strings.ReplaceAll(decl, "{{GeneratedFieldNameValue}}", bar.Name)
 		identifiersDecl += decl
 
-		initializerStatements += "\n\n	// Foo values setup"
+		initializerStatements += "\n\n	// Bar values setup"
 		// Initialisation of values
 		setValueField = StringInitStatement
 		setValueField = strings.ReplaceAll(setValueField, "{{Identifier}}", id)
 		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldName}}", "Name")
-		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(foo.Name))
+		setValueField = strings.ReplaceAll(setValueField, "{{GeneratedFieldNameValue}}", string(bar.Name))
 		initializerStatements += setValueField
 
 	}
@@ -172,15 +172,15 @@ func (stage *StageStruct) Marshall(file *os.File, modelsPackageName, packageName
 	}
 
 	// insertion initialization of objects to stage
-	for idx, foo := range fooOrdered {
+	for idx, bar := range barOrdered {
 		var setPointerField string
 		_ = setPointerField
 
-		id = generatesIdentifier("Foo", idx, foo.Name)
-		map_Foo_Identifiers[foo] = id
+		id = generatesIdentifier("Bar", idx, bar.Name)
+		map_Bar_Identifiers[bar] = id
 
 		// Initialisation of values
-		for _, _waldo := range foo.Waldos {
+		for _, _waldo := range bar.Waldos {
 			setPointerField = SliceOfPointersFieldInitStatement
 			setPointerField = strings.ReplaceAll(setPointerField, "{{Identifier}}", id)
 			setPointerField = strings.ReplaceAll(setPointerField, "{{GeneratedFieldName}}", "Waldos")

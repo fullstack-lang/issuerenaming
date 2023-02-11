@@ -29,13 +29,13 @@ type GongStructInterface interface {
 // StageStruct enables storage of staged instances
 // swagger:ignore
 type StageStruct struct { // insertion point for definition of arrays registering instances
-	Foos           map[*Foo]any
-	Foos_mapString map[string]*Foo
+	Bars           map[*Bar]any
+	Bars_mapString map[string]*Bar
 
-	OnAfterFooCreateCallback OnAfterCreateInterface[Foo]
-	OnAfterFooUpdateCallback OnAfterUpdateInterface[Foo]
-	OnAfterFooDeleteCallback OnAfterDeleteInterface[Foo]
-	OnAfterFooReadCallback   OnAfterReadInterface[Foo]
+	OnAfterBarCreateCallback OnAfterCreateInterface[Bar]
+	OnAfterBarUpdateCallback OnAfterUpdateInterface[Bar]
+	OnAfterBarDeleteCallback OnAfterDeleteInterface[Bar]
+	OnAfterBarReadCallback   OnAfterReadInterface[Bar]
 
 	Waldos           map[*Waldo]any
 	Waldos_mapString map[string]*Waldo
@@ -116,8 +116,8 @@ type BackRepoInterface interface {
 	BackupXL(stage *StageStruct, dirPath string)
 	RestoreXL(stage *StageStruct, dirPath string)
 	// insertion point for Commit and Checkout signatures
-	CommitFoo(foo *Foo)
-	CheckoutFoo(foo *Foo)
+	CommitBar(bar *Bar)
+	CheckoutBar(bar *Bar)
 	CommitWaldo(waldo *Waldo)
 	CheckoutWaldo(waldo *Waldo)
 	GetLastCommitFromBackNb() uint
@@ -126,8 +126,8 @@ type BackRepoInterface interface {
 
 // swagger:ignore instructs the gong compiler (gongc) to avoid this particular struct
 var Stage StageStruct = StageStruct{ // insertion point for array initiatialisation
-	Foos:           make(map[*Foo]any),
-	Foos_mapString: make(map[string]*Foo),
+	Bars:           make(map[*Bar]any),
+	Bars_mapString: make(map[string]*Bar),
 
 	Waldos:           make(map[*Waldo]any),
 	Waldos_mapString: make(map[string]*Waldo),
@@ -143,7 +143,7 @@ func (stage *StageStruct) Commit() {
 	}
 
 	// insertion point for computing the map of number of instances per gongstruct
-	stage.Map_GongStructName_InstancesNb["Foo"] = len(stage.Foos)
+	stage.Map_GongStructName_InstancesNb["Bar"] = len(stage.Bars)
 	stage.Map_GongStructName_InstancesNb["Waldo"] = len(stage.Waldos)
 
 }
@@ -154,7 +154,7 @@ func (stage *StageStruct) Checkout() {
 	}
 
 	// insertion point for computing the map of number of instances per gongstruct
-	stage.Map_GongStructName_InstancesNb["Foo"] = len(stage.Foos)
+	stage.Map_GongStructName_InstancesNb["Bar"] = len(stage.Bars)
 	stage.Map_GongStructName_InstancesNb["Waldo"] = len(stage.Waldos)
 
 }
@@ -188,99 +188,99 @@ func (stage *StageStruct) RestoreXL(dirPath string) {
 }
 
 // insertion point for cumulative sub template with model space calls
-// Stage puts foo to the model stage
-func (foo *Foo) Stage() *Foo {
-	Stage.Foos[foo] = __member
-	Stage.Foos_mapString[foo.Name] = foo
+// Stage puts bar to the model stage
+func (bar *Bar) Stage() *Bar {
+	Stage.Bars[bar] = __member
+	Stage.Bars_mapString[bar.Name] = bar
 
-	return foo
+	return bar
 }
 
-// Unstage removes foo off the model stage
-func (foo *Foo) Unstage() *Foo {
-	delete(Stage.Foos, foo)
-	delete(Stage.Foos_mapString, foo.Name)
-	return foo
+// Unstage removes bar off the model stage
+func (bar *Bar) Unstage() *Bar {
+	delete(Stage.Bars, bar)
+	delete(Stage.Bars_mapString, bar.Name)
+	return bar
 }
 
-// commit foo to the back repo (if it is already staged)
-func (foo *Foo) Commit() *Foo {
-	if _, ok := Stage.Foos[foo]; ok {
+// commit bar to the back repo (if it is already staged)
+func (bar *Bar) Commit() *Bar {
+	if _, ok := Stage.Bars[bar]; ok {
 		if Stage.BackRepo != nil {
-			Stage.BackRepo.CommitFoo(foo)
+			Stage.BackRepo.CommitBar(bar)
 		}
 	}
-	return foo
+	return bar
 }
 
-// Checkout foo to the back repo (if it is already staged)
-func (foo *Foo) Checkout() *Foo {
-	if _, ok := Stage.Foos[foo]; ok {
+// Checkout bar to the back repo (if it is already staged)
+func (bar *Bar) Checkout() *Bar {
+	if _, ok := Stage.Bars[bar]; ok {
 		if Stage.BackRepo != nil {
-			Stage.BackRepo.CheckoutFoo(foo)
+			Stage.BackRepo.CheckoutBar(bar)
 		}
 	}
-	return foo
+	return bar
 }
 
 //
 // Legacy, to be deleted
 //
 
-// StageCopy appends a copy of foo to the model stage
-func (foo *Foo) StageCopy() *Foo {
-	_foo := new(Foo)
-	*_foo = *foo
-	_foo.Stage()
-	return _foo
+// StageCopy appends a copy of bar to the model stage
+func (bar *Bar) StageCopy() *Bar {
+	_bar := new(Bar)
+	*_bar = *bar
+	_bar.Stage()
+	return _bar
 }
 
-// StageAndCommit appends foo to the model stage and commit to the orm repo
-func (foo *Foo) StageAndCommit() *Foo {
-	foo.Stage()
+// StageAndCommit appends bar to the model stage and commit to the orm repo
+func (bar *Bar) StageAndCommit() *Bar {
+	bar.Stage()
 	if Stage.AllModelsStructCreateCallback != nil {
-		Stage.AllModelsStructCreateCallback.CreateORMFoo(foo)
+		Stage.AllModelsStructCreateCallback.CreateORMBar(bar)
 	}
-	return foo
+	return bar
 }
 
-// DeleteStageAndCommit appends foo to the model stage and commit to the orm repo
-func (foo *Foo) DeleteStageAndCommit() *Foo {
-	foo.Unstage()
-	DeleteORMFoo(foo)
-	return foo
+// DeleteStageAndCommit appends bar to the model stage and commit to the orm repo
+func (bar *Bar) DeleteStageAndCommit() *Bar {
+	bar.Unstage()
+	DeleteORMBar(bar)
+	return bar
 }
 
-// StageCopyAndCommit appends a copy of foo to the model stage and commit to the orm repo
-func (foo *Foo) StageCopyAndCommit() *Foo {
-	_foo := new(Foo)
-	*_foo = *foo
-	_foo.Stage()
+// StageCopyAndCommit appends a copy of bar to the model stage and commit to the orm repo
+func (bar *Bar) StageCopyAndCommit() *Bar {
+	_bar := new(Bar)
+	*_bar = *bar
+	_bar.Stage()
 	if Stage.AllModelsStructCreateCallback != nil {
-		Stage.AllModelsStructCreateCallback.CreateORMFoo(foo)
+		Stage.AllModelsStructCreateCallback.CreateORMBar(bar)
 	}
-	return _foo
+	return _bar
 }
 
-// CreateORMFoo enables dynamic staging of a Foo instance
-func CreateORMFoo(foo *Foo) {
-	foo.Stage()
+// CreateORMBar enables dynamic staging of a Bar instance
+func CreateORMBar(bar *Bar) {
+	bar.Stage()
 	if Stage.AllModelsStructCreateCallback != nil {
-		Stage.AllModelsStructCreateCallback.CreateORMFoo(foo)
+		Stage.AllModelsStructCreateCallback.CreateORMBar(bar)
 	}
 }
 
-// DeleteORMFoo enables dynamic staging of a Foo instance
-func DeleteORMFoo(foo *Foo) {
-	foo.Unstage()
+// DeleteORMBar enables dynamic staging of a Bar instance
+func DeleteORMBar(bar *Bar) {
+	bar.Unstage()
 	if Stage.AllModelsStructDeleteCallback != nil {
-		Stage.AllModelsStructDeleteCallback.DeleteORMFoo(foo)
+		Stage.AllModelsStructDeleteCallback.DeleteORMBar(bar)
 	}
 }
 
 // for satisfaction of GongStruct interface
-func (foo *Foo) GetName() (res string) {
-	return foo.Name
+func (bar *Bar) GetName() (res string) {
+	return bar.Name
 }
 
 // Stage puts waldo to the model stage
@@ -380,18 +380,18 @@ func (waldo *Waldo) GetName() (res string) {
 
 // swagger:ignore
 type AllModelsStructCreateInterface interface { // insertion point for Callbacks on creation
-	CreateORMFoo(Foo *Foo)
+	CreateORMBar(Bar *Bar)
 	CreateORMWaldo(Waldo *Waldo)
 }
 
 type AllModelsStructDeleteInterface interface { // insertion point for Callbacks on deletion
-	DeleteORMFoo(Foo *Foo)
+	DeleteORMBar(Bar *Bar)
 	DeleteORMWaldo(Waldo *Waldo)
 }
 
 func (stage *StageStruct) Reset() { // insertion point for array reset
-	stage.Foos = make(map[*Foo]any)
-	stage.Foos_mapString = make(map[string]*Foo)
+	stage.Bars = make(map[*Bar]any)
+	stage.Bars_mapString = make(map[string]*Bar)
 
 	stage.Waldos = make(map[*Waldo]any)
 	stage.Waldos_mapString = make(map[string]*Waldo)
@@ -399,8 +399,8 @@ func (stage *StageStruct) Reset() { // insertion point for array reset
 }
 
 func (stage *StageStruct) Nil() { // insertion point for array nil
-	stage.Foos = nil
-	stage.Foos_mapString = nil
+	stage.Bars = nil
+	stage.Bars_mapString = nil
 
 	stage.Waldos = nil
 	stage.Waldos_mapString = nil
@@ -408,8 +408,8 @@ func (stage *StageStruct) Nil() { // insertion point for array nil
 }
 
 func (stage *StageStruct) Unstage() { // insertion point for array nil
-	for foo := range stage.Foos {
-		foo.Unstage()
+	for bar := range stage.Bars {
+		bar.Unstage()
 	}
 
 	for waldo := range stage.Waldos {
@@ -424,7 +424,7 @@ func (stage *StageStruct) Unstage() { // insertion point for array nil
 // - full refactoring of Gongstruct identifiers / fields
 type Gongstruct interface {
 	// insertion point for generic types
-	Foo | Waldo
+	Bar | Waldo
 }
 
 // Gongstruct is the type parameter for generated generic function that allows
@@ -433,14 +433,14 @@ type Gongstruct interface {
 // - full refactoring of Gongstruct identifiers / fields
 type PointerToGongstruct interface {
 	// insertion point for generic types
-	*Foo | *Waldo
+	*Bar | *Waldo
 	GetName() string
 }
 
 type GongstructSet interface {
 	map[any]any |
 		// insertion point for generic types
-		map[*Foo]any |
+		map[*Bar]any |
 		map[*Waldo]any |
 		map[*any]any // because go does not support an extra "|" at the end of type specifications
 }
@@ -448,7 +448,7 @@ type GongstructSet interface {
 type GongstructMapString interface {
 	map[any]any |
 		// insertion point for generic types
-		map[string]*Foo |
+		map[string]*Bar |
 		map[string]*Waldo |
 		map[*any]any // because go does not support an extra "|" at the end of type specifications
 }
@@ -460,8 +460,8 @@ func GongGetSet[Type GongstructSet]() *Type {
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case map[*Foo]any:
-		return any(&Stage.Foos).(*Type)
+	case map[*Bar]any:
+		return any(&Stage.Bars).(*Type)
 	case map[*Waldo]any:
 		return any(&Stage.Waldos).(*Type)
 	default:
@@ -476,8 +476,8 @@ func GongGetMap[Type GongstructMapString]() *Type {
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case map[string]*Foo:
-		return any(&Stage.Foos_mapString).(*Type)
+	case map[string]*Bar:
+		return any(&Stage.Bars_mapString).(*Type)
 	case map[string]*Waldo:
 		return any(&Stage.Waldos_mapString).(*Type)
 	default:
@@ -492,8 +492,8 @@ func GetGongstructInstancesSet[Type Gongstruct]() *map[*Type]any {
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case Foo:
-		return any(&Stage.Foos).(*map[*Type]any)
+	case Bar:
+		return any(&Stage.Bars).(*map[*Type]any)
 	case Waldo:
 		return any(&Stage.Waldos).(*map[*Type]any)
 	default:
@@ -508,8 +508,8 @@ func GetGongstructInstancesMap[Type Gongstruct]() *map[string]*Type {
 
 	switch any(ret).(type) {
 	// insertion point for generic get functions
-	case Foo:
-		return any(&Stage.Foos_mapString).(*map[string]*Type)
+	case Bar:
+		return any(&Stage.Bars_mapString).(*map[string]*Type)
 	case Waldo:
 		return any(&Stage.Waldos_mapString).(*map[string]*Type)
 	default:
@@ -526,8 +526,8 @@ func GetAssociationName[Type Gongstruct]() *Type {
 
 	switch any(ret).(type) {
 	// insertion point for instance with special fields
-	case Foo:
-		return any(&Foo{
+	case Bar:
+		return any(&Bar{
 			// Initialisation of associations
 			// field is initialized with an instance of Waldo with the name of the field
 			Waldos: []*Waldo{{Name: "Waldos"}},
@@ -553,8 +553,8 @@ func GetPointerReverseMap[Start, End Gongstruct](fieldname string) map[*End][]*S
 
 	switch any(ret).(type) {
 	// insertion point of functions that provide maps for reverse associations
-	// reverse maps of direct associations of Foo
-	case Foo:
+	// reverse maps of direct associations of Bar
+	case Bar:
 		switch fieldname {
 		// insertion point for per direct association field
 		}
@@ -578,15 +578,15 @@ func GetSliceOfPointersReverseMap[Start, End Gongstruct](fieldname string) map[*
 
 	switch any(ret).(type) {
 	// insertion point of functions that provide maps for reverse associations
-	// reverse maps of direct associations of Foo
-	case Foo:
+	// reverse maps of direct associations of Bar
+	case Bar:
 		switch fieldname {
 		// insertion point for per direct association field
 		case "Waldos":
-			res := make(map[*Waldo]*Foo)
-			for foo := range Stage.Foos {
-				for _, waldo_ := range foo.Waldos {
-					res[waldo_] = foo
+			res := make(map[*Waldo]*Bar)
+			for bar := range Stage.Bars {
+				for _, waldo_ := range bar.Waldos {
+					res[waldo_] = bar
 				}
 			}
 			return any(res).(map[*End]*Start)
@@ -608,8 +608,8 @@ func GetGongstructName[Type Gongstruct]() (res string) {
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
-	case Foo:
-		res = "Foo"
+	case Bar:
+		res = "Bar"
 	case Waldo:
 		res = "Waldo"
 	}
@@ -623,7 +623,7 @@ func GetFields[Type Gongstruct]() (res []string) {
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct name
-	case Foo:
+	case Bar:
 		res = []string{"Name", "Waldos"}
 	case Waldo:
 		res = []string{"Name"}
@@ -636,13 +636,13 @@ func GetFieldStringValue[Type Gongstruct](instance Type, fieldName string) (res 
 
 	switch any(ret).(type) {
 	// insertion point for generic get gongstruct field value
-	case Foo:
+	case Bar:
 		switch fieldName {
 		// string value of fields
 		case "Name":
-			res = any(instance).(Foo).Name
+			res = any(instance).(Bar).Name
 		case "Waldos":
-			for idx, __instance__ := range any(instance).(Foo).Waldos {
+			for idx, __instance__ := range any(instance).(Bar).Waldos {
 				if idx > 0 {
 					res += "\n"
 				}

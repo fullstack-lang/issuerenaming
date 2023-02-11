@@ -4,8 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 
 // insertion point sub template for services imports 
-import { FooDB } from './foo-db'
-import { FooService } from './foo.service'
+import { BarDB } from './bar-db'
+import { BarService } from './bar.service'
 
 import { WaldoDB } from './waldo-db'
 import { WaldoService } from './waldo.service'
@@ -13,9 +13,9 @@ import { WaldoService } from './waldo.service'
 
 // FrontRepo stores all instances in a front repository (design pattern repository)
 export class FrontRepo { // insertion point sub template 
-  Foos_array = new Array<FooDB>(); // array of repo instances
-  Foos = new Map<number, FooDB>(); // map of repo instances
-  Foos_batch = new Map<number, FooDB>(); // same but only in last GET (for finding repo instances to delete)
+  Bars_array = new Array<BarDB>(); // array of repo instances
+  Bars = new Map<number, BarDB>(); // map of repo instances
+  Bars_batch = new Map<number, BarDB>(); // same but only in last GET (for finding repo instances to delete)
   Waldos_array = new Array<WaldoDB>(); // array of repo instances
   Waldos = new Map<number, WaldoDB>(); // map of repo instances
   Waldos_batch = new Map<number, WaldoDB>(); // same but only in last GET (for finding repo instances to delete)
@@ -77,7 +77,7 @@ export class FrontRepoService {
 
   constructor(
     private http: HttpClient, // insertion point sub template 
-    private fooService: FooService,
+    private barService: BarService,
     private waldoService: WaldoService,
   ) { }
 
@@ -109,10 +109,10 @@ export class FrontRepoService {
 
   // typing of observable can be messy in typescript. Therefore, one force the type
   observableFrontRepo: [ // insertion point sub template 
-    Observable<FooDB[]>,
+    Observable<BarDB[]>,
     Observable<WaldoDB[]>,
   ] = [ // insertion point sub template 
-      this.fooService.getFoos(),
+      this.barService.getBars(),
       this.waldoService.getWaldos(),
     ];
 
@@ -129,13 +129,13 @@ export class FrontRepoService {
           this.observableFrontRepo
         ).subscribe(
           ([ // insertion point sub template for declarations 
-            foos_,
+            bars_,
             waldos_,
           ]) => {
             // Typing can be messy with many items. Therefore, type casting is necessary here
             // insertion point sub template for type casting 
-            var foos: FooDB[]
-            foos = foos_ as FooDB[]
+            var bars: BarDB[]
+            bars = bars_ as BarDB[]
             var waldos: WaldoDB[]
             waldos = waldos_ as WaldoDB[]
 
@@ -143,29 +143,29 @@ export class FrontRepoService {
             // First Step: init map of instances
             // insertion point sub template for init 
             // init the array
-            FrontRepoSingloton.Foos_array = foos
+            FrontRepoSingloton.Bars_array = bars
 
-            // clear the map that counts Foo in the GET
-            FrontRepoSingloton.Foos_batch.clear()
+            // clear the map that counts Bar in the GET
+            FrontRepoSingloton.Bars_batch.clear()
 
-            foos.forEach(
-              foo => {
-                FrontRepoSingloton.Foos.set(foo.ID, foo)
-                FrontRepoSingloton.Foos_batch.set(foo.ID, foo)
+            bars.forEach(
+              bar => {
+                FrontRepoSingloton.Bars.set(bar.ID, bar)
+                FrontRepoSingloton.Bars_batch.set(bar.ID, bar)
               }
             )
 
-            // clear foos that are absent from the batch
-            FrontRepoSingloton.Foos.forEach(
-              foo => {
-                if (FrontRepoSingloton.Foos_batch.get(foo.ID) == undefined) {
-                  FrontRepoSingloton.Foos.delete(foo.ID)
+            // clear bars that are absent from the batch
+            FrontRepoSingloton.Bars.forEach(
+              bar => {
+                if (FrontRepoSingloton.Bars_batch.get(bar.ID) == undefined) {
+                  FrontRepoSingloton.Bars.delete(bar.ID)
                 }
               }
             )
 
-            // sort Foos_array array
-            FrontRepoSingloton.Foos_array.sort((t1, t2) => {
+            // sort Bars_array array
+            FrontRepoSingloton.Bars_array.sort((t1, t2) => {
               if (t1.Name > t2.Name) {
                 return 1;
               }
@@ -212,8 +212,8 @@ export class FrontRepoService {
             // 
             // Second Step: redeem pointers between instances (thanks to maps in the First Step)
             // insertion point sub template for redeem 
-            foos.forEach(
-              foo => {
+            bars.forEach(
+              bar => {
                 // insertion point sub sub template for ONE-/ZERO-ONE associations pointers redeeming
 
                 // insertion point for redeeming ONE-MANY associations
@@ -224,16 +224,16 @@ export class FrontRepoService {
                 // insertion point sub sub template for ONE-/ZERO-ONE associations pointers redeeming
 
                 // insertion point for redeeming ONE-MANY associations
-                // insertion point for slice of pointer field Foo.Waldos redeeming
+                // insertion point for slice of pointer field Bar.Waldos redeeming
                 {
-                  let _foo = FrontRepoSingloton.Foos.get(waldo.Foo_WaldosDBID.Int64)
-                  if (_foo) {
-                    if (_foo.Waldos == undefined) {
-                      _foo.Waldos = new Array<WaldoDB>()
+                  let _bar = FrontRepoSingloton.Bars.get(waldo.Bar_WaldosDBID.Int64)
+                  if (_bar) {
+                    if (_bar.Waldos == undefined) {
+                      _bar.Waldos = new Array<WaldoDB>()
                     }
-                    _foo.Waldos.push(waldo)
-                    if (waldo.Foo_Waldos_reverse == undefined) {
-                      waldo.Foo_Waldos_reverse = _foo
+                    _bar.Waldos.push(waldo)
+                    if (waldo.Bar_Waldos_reverse == undefined) {
+                      waldo.Bar_Waldos_reverse = _bar
                     }
                   }
                 }
@@ -250,29 +250,29 @@ export class FrontRepoService {
 
   // insertion point for pull per struct 
 
-  // FooPull performs a GET on Foo of the stack and redeem association pointers 
-  FooPull(): Observable<FrontRepo> {
+  // BarPull performs a GET on Bar of the stack and redeem association pointers 
+  BarPull(): Observable<FrontRepo> {
     return new Observable<FrontRepo>(
       (observer) => {
         combineLatest([
-          this.fooService.getFoos()
+          this.barService.getBars()
         ]).subscribe(
           ([ // insertion point sub template 
-            foos,
+            bars,
           ]) => {
             // init the array
-            FrontRepoSingloton.Foos_array = foos
+            FrontRepoSingloton.Bars_array = bars
 
-            // clear the map that counts Foo in the GET
-            FrontRepoSingloton.Foos_batch.clear()
+            // clear the map that counts Bar in the GET
+            FrontRepoSingloton.Bars_batch.clear()
 
             // 
             // First Step: init map of instances
             // insertion point sub template 
-            foos.forEach(
-              foo => {
-                FrontRepoSingloton.Foos.set(foo.ID, foo)
-                FrontRepoSingloton.Foos_batch.set(foo.ID, foo)
+            bars.forEach(
+              bar => {
+                FrontRepoSingloton.Bars.set(bar.ID, bar)
+                FrontRepoSingloton.Bars_batch.set(bar.ID, bar)
 
                 // insertion point for redeeming ONE/ZERO-ONE associations
 
@@ -280,11 +280,11 @@ export class FrontRepoService {
               }
             )
 
-            // clear foos that are absent from the GET
-            FrontRepoSingloton.Foos.forEach(
-              foo => {
-                if (FrontRepoSingloton.Foos_batch.get(foo.ID) == undefined) {
-                  FrontRepoSingloton.Foos.delete(foo.ID)
+            // clear bars that are absent from the GET
+            FrontRepoSingloton.Bars.forEach(
+              bar => {
+                if (FrontRepoSingloton.Bars_batch.get(bar.ID) == undefined) {
+                  FrontRepoSingloton.Bars.delete(bar.ID)
                 }
               }
             )
@@ -328,16 +328,16 @@ export class FrontRepoService {
                 // insertion point for redeeming ONE/ZERO-ONE associations
 
                 // insertion point for redeeming ONE-MANY associations
-                // insertion point for slice of pointer field Foo.Waldos redeeming
+                // insertion point for slice of pointer field Bar.Waldos redeeming
                 {
-                  let _foo = FrontRepoSingloton.Foos.get(waldo.Foo_WaldosDBID.Int64)
-                  if (_foo) {
-                    if (_foo.Waldos == undefined) {
-                      _foo.Waldos = new Array<WaldoDB>()
+                  let _bar = FrontRepoSingloton.Bars.get(waldo.Bar_WaldosDBID.Int64)
+                  if (_bar) {
+                    if (_bar.Waldos == undefined) {
+                      _bar.Waldos = new Array<WaldoDB>()
                     }
-                    _foo.Waldos.push(waldo)
-                    if (waldo.Foo_Waldos_reverse == undefined) {
-                      waldo.Foo_Waldos_reverse = _foo
+                    _bar.Waldos.push(waldo)
+                    if (waldo.Bar_Waldos_reverse == undefined) {
+                      waldo.Bar_Waldos_reverse = _bar
                     }
                   }
                 }
@@ -367,7 +367,7 @@ export class FrontRepoService {
 }
 
 // insertion point for get unique ID per struct 
-export function getFooUniqueID(id: number): number {
+export function getBarUniqueID(id: number): number {
   return 31 * id
 }
 export function getWaldoUniqueID(id: number): number {

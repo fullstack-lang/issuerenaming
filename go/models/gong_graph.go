@@ -5,8 +5,8 @@ func IsStaged[Type Gongstruct](stage *StageStruct, instance *Type) (ok bool) {
 
 	switch target := any(instance).(type) {
 	// insertion point for stage
-	case *Foo:
-		ok = stage.IsStagedFoo(target)
+	case *Bar:
+		ok = stage.IsStagedBar(target)
 
 	case *Waldo:
 		ok = stage.IsStagedWaldo(target)
@@ -16,9 +16,9 @@ func IsStaged[Type Gongstruct](stage *StageStruct, instance *Type) (ok bool) {
 }
 
 // insertion point for stage per struct
-	func (stage *StageStruct) IsStagedFoo(foo *Foo) (ok bool) {
+	func (stage *StageStruct) IsStagedBar(bar *Bar) (ok bool) {
 
-		_, ok = stage.Foos[foo]
+		_, ok = stage.Bars[bar]
 	
 		return
 	}
@@ -39,8 +39,8 @@ func StageBranch[Type Gongstruct](stage *StageStruct, instance *Type) {
 
 	switch target := any(instance).(type) {
 	// insertion point for stage branch
-	case *Foo:
-		stage.StageBranchFoo(target)
+	case *Bar:
+		stage.StageBranchBar(target)
 
 	case *Waldo:
 		stage.StageBranchWaldo(target)
@@ -49,19 +49,19 @@ func StageBranch[Type Gongstruct](stage *StageStruct, instance *Type) {
 }
 
 // insertion point for stage branch per struct
-func (stage *StageStruct) StageBranchFoo(foo *Foo) {
+func (stage *StageStruct) StageBranchBar(bar *Bar) {
 
 	// check if instance is already staged
-	if IsStaged(stage, foo) {
+	if IsStaged(stage, bar) {
 		return
 	}
 
-	foo.Stage()
+	bar.Stage()
 
 	//insertion point for the staging of instances referenced by pointers
 
 	//insertion point for the staging of instances referenced by slice of pointers
-	for _, _waldo := range foo.Waldos {
+	for _, _waldo := range bar.Waldos {
 		StageBranch(stage, _waldo)
 	}
 
@@ -91,8 +91,8 @@ func UnstageBranch[Type Gongstruct](stage *StageStruct, instance *Type) {
 
 	switch target := any(instance).(type) {
 	// insertion point for unstage branch
-	case *Foo:
-		stage.UnstageBranchFoo(target)
+	case *Bar:
+		stage.UnstageBranchBar(target)
 
 	case *Waldo:
 		stage.UnstageBranchWaldo(target)
@@ -101,19 +101,19 @@ func UnstageBranch[Type Gongstruct](stage *StageStruct, instance *Type) {
 }
 
 // insertion point for unstage branch per struct
-func (stage *StageStruct) UnstageBranchFoo(foo *Foo) {
+func (stage *StageStruct) UnstageBranchBar(bar *Bar) {
 
 	// check if instance is already staged
-	if ! IsStaged(stage, foo) {
+	if ! IsStaged(stage, bar) {
 		return
 	}
 
-	foo.Unstage()
+	bar.Unstage()
 
 	//insertion point for the staging of instances referenced by pointers
 
 	//insertion point for the staging of instances referenced by slice of pointers
-	for _, _waldo := range foo.Waldos {
+	for _, _waldo := range bar.Waldos {
 		UnstageBranch(stage, _waldo)
 	}
 

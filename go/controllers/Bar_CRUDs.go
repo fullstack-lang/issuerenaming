@@ -13,14 +13,14 @@ import (
 )
 
 // declaration in order to justify use of the models import
-var __Foo__dummysDeclaration__ models.Foo
-var __Foo_time__dummyDeclaration time.Duration
+var __Bar__dummysDeclaration__ models.Bar
+var __Bar_time__dummyDeclaration time.Duration
 
-// An FooID parameter model.
+// An BarID parameter model.
 //
 // This is used for operations that want the ID of an order in the path
-// swagger:parameters getFoo updateFoo deleteFoo
-type FooID struct {
+// swagger:parameters getBar updateBar deleteBar
+type BarID struct {
 	// The ID of the order
 	//
 	// in: path
@@ -28,31 +28,31 @@ type FooID struct {
 	ID int64
 }
 
-// FooInput is a schema that can validate the user’s
+// BarInput is a schema that can validate the user’s
 // input to prevent us from getting invalid data
-// swagger:parameters postFoo updateFoo
-type FooInput struct {
-	// The Foo to submit or modify
+// swagger:parameters postBar updateBar
+type BarInput struct {
+	// The Bar to submit or modify
 	// in: body
-	Foo *orm.FooAPI
+	Bar *orm.BarAPI
 }
 
-// GetFoos
+// GetBars
 //
-// swagger:route GET /foos foos getFoos
+// swagger:route GET /bars bars getBars
 //
-// # Get all foos
+// # Get all bars
 //
 // Responses:
 // default: genericError
 //
-//	200: fooDBResponse
-func GetFoos(c *gin.Context) {
-	db := orm.BackRepo.BackRepoFoo.GetDB()
+//	200: barDBResponse
+func GetBars(c *gin.Context) {
+	db := orm.BackRepo.BackRepoBar.GetDB()
 
 	// source slice
-	var fooDBs []orm.FooDB
-	query := db.Find(&fooDBs)
+	var barDBs []orm.BarDB
+	query := db.Find(&barDBs)
 	if query.Error != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -63,29 +63,29 @@ func GetFoos(c *gin.Context) {
 	}
 
 	// slice that will be transmitted to the front
-	fooAPIs := make([]orm.FooAPI, 0)
+	barAPIs := make([]orm.BarAPI, 0)
 
-	// for each foo, update fields from the database nullable fields
-	for idx := range fooDBs {
-		fooDB := &fooDBs[idx]
-		_ = fooDB
-		var fooAPI orm.FooAPI
+	// for each bar, update fields from the database nullable fields
+	for idx := range barDBs {
+		barDB := &barDBs[idx]
+		_ = barDB
+		var barAPI orm.BarAPI
 
 		// insertion point for updating fields
-		fooAPI.ID = fooDB.ID
-		fooDB.CopyBasicFieldsToFoo(&fooAPI.Foo)
-		fooAPI.FooPointersEnconding = fooDB.FooPointersEnconding
-		fooAPIs = append(fooAPIs, fooAPI)
+		barAPI.ID = barDB.ID
+		barDB.CopyBasicFieldsToBar(&barAPI.Bar)
+		barAPI.BarPointersEnconding = barDB.BarPointersEnconding
+		barAPIs = append(barAPIs, barAPI)
 	}
 
-	c.JSON(http.StatusOK, fooAPIs)
+	c.JSON(http.StatusOK, barAPIs)
 }
 
-// PostFoo
+// PostBar
 //
-// swagger:route POST /foos foos postFoo
+// swagger:route POST /bars bars postBar
 //
-// Creates a foo
+// Creates a bar
 //
 //	Consumes:
 //	- application/json
@@ -95,11 +95,11 @@ func GetFoos(c *gin.Context) {
 //
 //	Responses:
 //	  200: nodeDBResponse
-func PostFoo(c *gin.Context) {
-	db := orm.BackRepo.BackRepoFoo.GetDB()
+func PostBar(c *gin.Context) {
+	db := orm.BackRepo.BackRepoBar.GetDB()
 
 	// Validate input
-	var input orm.FooAPI
+	var input orm.BarAPI
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -111,12 +111,12 @@ func PostFoo(c *gin.Context) {
 		return
 	}
 
-	// Create foo
-	fooDB := orm.FooDB{}
-	fooDB.FooPointersEnconding = input.FooPointersEnconding
-	fooDB.CopyBasicFieldsFromFoo(&input.Foo)
+	// Create bar
+	barDB := orm.BarDB{}
+	barDB.BarPointersEnconding = input.BarPointersEnconding
+	barDB.CopyBasicFieldsFromBar(&input.Bar)
 
-	query := db.Create(&fooDB)
+	query := db.Create(&barDB)
 	if query.Error != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -127,36 +127,36 @@ func PostFoo(c *gin.Context) {
 	}
 
 	// get an instance (not staged) from DB instance, and call callback function
-	orm.BackRepo.BackRepoFoo.CheckoutPhaseOneInstance(&fooDB)
-	foo := (*orm.BackRepo.BackRepoFoo.Map_FooDBID_FooPtr)[fooDB.ID]
+	orm.BackRepo.BackRepoBar.CheckoutPhaseOneInstance(&barDB)
+	bar := (*orm.BackRepo.BackRepoBar.Map_BarDBID_BarPtr)[barDB.ID]
 
-	if foo != nil {
-		models.AfterCreateFromFront(&models.Stage, foo)
+	if bar != nil {
+		models.AfterCreateFromFront(&models.Stage, bar)
 	}
 
 	// a POST is equivalent to a back repo commit increase
 	// (this will be improved with implementation of unit of work design pattern)
 	orm.BackRepo.IncrementPushFromFrontNb()
 
-	c.JSON(http.StatusOK, fooDB)
+	c.JSON(http.StatusOK, barDB)
 }
 
-// GetFoo
+// GetBar
 //
-// swagger:route GET /foos/{ID} foos getFoo
+// swagger:route GET /bars/{ID} bars getBar
 //
-// Gets the details for a foo.
+// Gets the details for a bar.
 //
 // Responses:
 // default: genericError
 //
-//	200: fooDBResponse
-func GetFoo(c *gin.Context) {
-	db := orm.BackRepo.BackRepoFoo.GetDB()
+//	200: barDBResponse
+func GetBar(c *gin.Context) {
+	db := orm.BackRepo.BackRepoBar.GetDB()
 
-	// Get fooDB in DB
-	var fooDB orm.FooDB
-	if err := db.First(&fooDB, c.Param("id")).Error; err != nil {
+	// Get barDB in DB
+	var barDB orm.BarDB
+	if err := db.First(&barDB, c.Param("id")).Error; err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -165,32 +165,32 @@ func GetFoo(c *gin.Context) {
 		return
 	}
 
-	var fooAPI orm.FooAPI
-	fooAPI.ID = fooDB.ID
-	fooAPI.FooPointersEnconding = fooDB.FooPointersEnconding
-	fooDB.CopyBasicFieldsToFoo(&fooAPI.Foo)
+	var barAPI orm.BarAPI
+	barAPI.ID = barDB.ID
+	barAPI.BarPointersEnconding = barDB.BarPointersEnconding
+	barDB.CopyBasicFieldsToBar(&barAPI.Bar)
 
-	c.JSON(http.StatusOK, fooAPI)
+	c.JSON(http.StatusOK, barAPI)
 }
 
-// UpdateFoo
+// UpdateBar
 //
-// swagger:route PATCH /foos/{ID} foos updateFoo
+// swagger:route PATCH /bars/{ID} bars updateBar
 //
-// # Update a foo
+// # Update a bar
 //
 // Responses:
 // default: genericError
 //
-//	200: fooDBResponse
-func UpdateFoo(c *gin.Context) {
-	db := orm.BackRepo.BackRepoFoo.GetDB()
+//	200: barDBResponse
+func UpdateBar(c *gin.Context) {
+	db := orm.BackRepo.BackRepoBar.GetDB()
 
 	// Get model if exist
-	var fooDB orm.FooDB
+	var barDB orm.BarDB
 
-	// fetch the foo
-	query := db.First(&fooDB, c.Param("id"))
+	// fetch the bar
+	query := db.First(&barDB, c.Param("id"))
 
 	if query.Error != nil {
 		var returnError GenericError
@@ -202,7 +202,7 @@ func UpdateFoo(c *gin.Context) {
 	}
 
 	// Validate input
-	var input orm.FooAPI
+	var input orm.BarAPI
 	if err := c.ShouldBindJSON(&input); err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -210,10 +210,10 @@ func UpdateFoo(c *gin.Context) {
 	}
 
 	// update
-	fooDB.CopyBasicFieldsFromFoo(&input.Foo)
-	fooDB.FooPointersEnconding = input.FooPointersEnconding
+	barDB.CopyBasicFieldsFromBar(&input.Bar)
+	barDB.BarPointersEnconding = input.BarPointersEnconding
 
-	query = db.Model(&fooDB).Updates(fooDB)
+	query = db.Model(&barDB).Updates(barDB)
 	if query.Error != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
@@ -224,13 +224,13 @@ func UpdateFoo(c *gin.Context) {
 	}
 
 	// get an instance (not staged) from DB instance, and call callback function
-	fooNew := new(models.Foo)
-	fooDB.CopyBasicFieldsToFoo(fooNew)
+	barNew := new(models.Bar)
+	barDB.CopyBasicFieldsToBar(barNew)
 
 	// get stage instance from DB instance, and call callback function
-	fooOld := (*orm.BackRepo.BackRepoFoo.Map_FooDBID_FooPtr)[fooDB.ID]
-	if fooOld != nil {
-		models.AfterUpdateFromFront(&models.Stage, fooOld, fooNew)
+	barOld := (*orm.BackRepo.BackRepoBar.Map_BarDBID_BarPtr)[barDB.ID]
+	if barOld != nil {
+		models.AfterUpdateFromFront(&models.Stage, barOld, barNew)
 	}
 
 	// an UPDATE generates a back repo commit increase
@@ -239,25 +239,25 @@ func UpdateFoo(c *gin.Context) {
 	// generates a checkout
 	orm.BackRepo.IncrementPushFromFrontNb()
 
-	// return status OK with the marshalling of the the fooDB
-	c.JSON(http.StatusOK, fooDB)
+	// return status OK with the marshalling of the the barDB
+	c.JSON(http.StatusOK, barDB)
 }
 
-// DeleteFoo
+// DeleteBar
 //
-// swagger:route DELETE /foos/{ID} foos deleteFoo
+// swagger:route DELETE /bars/{ID} bars deleteBar
 //
-// # Delete a foo
+// # Delete a bar
 //
 // default: genericError
 //
-//	200: fooDBResponse
-func DeleteFoo(c *gin.Context) {
-	db := orm.BackRepo.BackRepoFoo.GetDB()
+//	200: barDBResponse
+func DeleteBar(c *gin.Context) {
+	db := orm.BackRepo.BackRepoBar.GetDB()
 
 	// Get model if exist
-	var fooDB orm.FooDB
-	if err := db.First(&fooDB, c.Param("id")).Error; err != nil {
+	var barDB orm.BarDB
+	if err := db.First(&barDB, c.Param("id")).Error; err != nil {
 		var returnError GenericError
 		returnError.Body.Code = http.StatusBadRequest
 		returnError.Body.Message = err.Error()
@@ -267,16 +267,16 @@ func DeleteFoo(c *gin.Context) {
 	}
 
 	// with gorm.Model field, default delete is a soft delete. Unscoped() force delete
-	db.Unscoped().Delete(&fooDB)
+	db.Unscoped().Delete(&barDB)
 
 	// get an instance (not staged) from DB instance, and call callback function
-	fooDeleted := new(models.Foo)
-	fooDB.CopyBasicFieldsToFoo(fooDeleted)
+	barDeleted := new(models.Bar)
+	barDB.CopyBasicFieldsToBar(barDeleted)
 
 	// get stage instance from DB instance, and call callback function
-	fooStaged := (*orm.BackRepo.BackRepoFoo.Map_FooDBID_FooPtr)[fooDB.ID]
-	if fooStaged != nil {
-		models.AfterDeleteFromFront(&models.Stage, fooStaged, fooDeleted)
+	barStaged := (*orm.BackRepo.BackRepoBar.Map_BarDBID_BarPtr)[barDB.ID]
+	if barStaged != nil {
+		models.AfterDeleteFromFront(&models.Stage, barStaged, barDeleted)
 	}
 
 	// a DELETE generates a back repo commit increase

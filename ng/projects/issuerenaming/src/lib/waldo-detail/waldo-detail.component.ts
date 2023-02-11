@@ -10,7 +10,7 @@ import { MapOfComponents } from '../map-components'
 import { MapOfSortingComponents } from '../map-components'
 
 // insertion point for imports
-import { FooDB } from '../foo-db'
+import { BarDB } from '../bar-db'
 
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -24,7 +24,7 @@ enum WaldoDetailComponentState {
 	CREATE_INSTANCE,
 	UPDATE_INSTANCE,
 	// insertion point for declarations of enum values of state
-	CREATE_INSTANCE_WITH_ASSOCIATION_Foo_Waldos_SET,
+	CREATE_INSTANCE_WITH_ASSOCIATION_Bar_Waldos_SET,
 }
 
 @Component({
@@ -89,8 +89,8 @@ export class WaldoDetailComponent implements OnInit {
 				switch (this.originStructFieldName) {
 					// insertion point for state computation
 					case "Waldos":
-						// console.log("Waldo" + " is instanciated with back pointer to instance " + this.id + " Foo association Waldos")
-						this.state = WaldoDetailComponentState.CREATE_INSTANCE_WITH_ASSOCIATION_Foo_Waldos_SET
+						// console.log("Waldo" + " is instanciated with back pointer to instance " + this.id + " Bar association Waldos")
+						this.state = WaldoDetailComponentState.CREATE_INSTANCE_WITH_ASSOCIATION_Bar_Waldos_SET
 						break;
 					default:
 						console.log(this.originStructFieldName + " is unkown association")
@@ -128,9 +128,9 @@ export class WaldoDetailComponent implements OnInit {
 						this.waldo = waldo!
 						break;
 					// insertion point for init of association field
-					case WaldoDetailComponentState.CREATE_INSTANCE_WITH_ASSOCIATION_Foo_Waldos_SET:
+					case WaldoDetailComponentState.CREATE_INSTANCE_WITH_ASSOCIATION_Bar_Waldos_SET:
 						this.waldo = new (WaldoDB)
-						this.waldo.Foo_Waldos_reverse = frontRepo.Foos.get(this.id)!
+						this.waldo.Bar_Waldos_reverse = frontRepo.Bars.get(this.id)!
 						break;
 					default:
 						console.log(this.state + " is unkown state")
@@ -153,17 +153,17 @@ export class WaldoDetailComponent implements OnInit {
 		// save from the front pointer space to the non pointer space for serialization
 
 		// insertion point for translation/nullation of each pointers
-		if (this.waldo.Foo_Waldos_reverse != undefined) {
-			if (this.waldo.Foo_WaldosDBID == undefined) {
-				this.waldo.Foo_WaldosDBID = new NullInt64
+		if (this.waldo.Bar_Waldos_reverse != undefined) {
+			if (this.waldo.Bar_WaldosDBID == undefined) {
+				this.waldo.Bar_WaldosDBID = new NullInt64
 			}
-			this.waldo.Foo_WaldosDBID.Int64 = this.waldo.Foo_Waldos_reverse.ID
-			this.waldo.Foo_WaldosDBID.Valid = true
-			if (this.waldo.Foo_WaldosDBID_Index == undefined) {
-				this.waldo.Foo_WaldosDBID_Index = new NullInt64
+			this.waldo.Bar_WaldosDBID.Int64 = this.waldo.Bar_Waldos_reverse.ID
+			this.waldo.Bar_WaldosDBID.Valid = true
+			if (this.waldo.Bar_WaldosDBID_Index == undefined) {
+				this.waldo.Bar_WaldosDBID_Index = new NullInt64
 			}
-			this.waldo.Foo_WaldosDBID_Index.Valid = true
-			this.waldo.Foo_Waldos_reverse = new FooDB // very important, otherwise, circular JSON
+			this.waldo.Bar_WaldosDBID_Index.Valid = true
+			this.waldo.Bar_Waldos_reverse = new BarDB // very important, otherwise, circular JSON
 		}
 
 		switch (this.state) {

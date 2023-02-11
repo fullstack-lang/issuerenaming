@@ -15,11 +15,11 @@ export * from './lib/gongstruct-selection.service'
 export * from './lib/push_from_front_nb.service'
 
 
-export * from './lib/foo-detail/foo-detail.component'
-export * from './lib/foo-sorting/foo-sorting.component'
-export * from './lib/foos-table/foos-table.component'
-export * from './lib/foo-db'
-export * from './lib/foo.service'
+export * from './lib/bar-detail/bar-detail.component'
+export * from './lib/bar-sorting/bar-sorting.component'
+export * from './lib/bars-table/bars-table.component'
+export * from './lib/bar-db'
+export * from './lib/bar.service'
 
 export * from './lib/waldo-detail/waldo-detail.component'
 export * from './lib/waldo-sorting/waldo-sorting.component'

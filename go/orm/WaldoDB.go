@@ -46,11 +46,11 @@ type WaldoAPI struct {
 type WaldoPointersEnconding struct {
 	// insertion for pointer fields encoding declaration
 
-	// Implementation of a reverse ID for field Foo{}.Waldos []*Waldo
-	Foo_WaldosDBID sql.NullInt64
+	// Implementation of a reverse ID for field Bar{}.Waldos []*Waldo
+	Bar_WaldosDBID sql.NullInt64
 
 	// implementation of the index of the withing the slice
-	Foo_WaldosDBID_Index sql.NullInt64
+	Bar_WaldosDBID_Index sql.NullInt64
 }
 
 // WaldoDB describes a waldo in the database
@@ -560,9 +560,9 @@ func (backRepoWaldo *BackRepoWaldoStruct) RestorePhaseTwo() {
 
 		// insertion point for reindexing pointers encoding
 		// This reindex waldo.Waldos
-		if waldoDB.Foo_WaldosDBID.Int64 != 0 {
-			waldoDB.Foo_WaldosDBID.Int64 =
-				int64(BackRepoFooid_atBckpTime_newID[uint(waldoDB.Foo_WaldosDBID.Int64)])
+		if waldoDB.Bar_WaldosDBID.Int64 != 0 {
+			waldoDB.Bar_WaldosDBID.Int64 =
+				int64(BackRepoBarid_atBckpTime_newID[uint(waldoDB.Bar_WaldosDBID.Int64)])
 		}
 
 		// update databse with new index encoding

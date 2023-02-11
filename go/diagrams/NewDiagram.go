@@ -27,11 +27,11 @@ var ___dummy__ref_models_NewDiagram ref_models.StageStruct
 var map_DocLink_Identifier_NewDiagram map[string]any = map[string]any{
 	// injection point for docLink to identifiers
 
-	"ref_models.Foo": &(ref_models.Foo{}),
+	"ref_models.Foo": &(ref_models.Bar{}),
 
-	"ref_models.Foo.Name": (ref_models.Foo{}).Name,
+	"ref_models.Foo.Name": (ref_models.Bar{}).Name,
 
-	"ref_models.Foo.Waldos": (ref_models.Foo{}).Waldos,
+	"ref_models.Foo.Waldos": (ref_models.Bar{}).Waldos,
 
 	"ref_models.GONG__ENUM_CAST_INT": ref_models.GONG__ENUM_CAST_INT,
 

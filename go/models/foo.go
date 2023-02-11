@@ -1,6 +1,6 @@
 package models
 
-type Foo struct {
+type Bar struct {
 	Name   string
 	Waldos []*Waldo
 }

@@ -1,5 +1,5 @@
 // insertion point for imports
-import { FooDB } from './foo-db'
+import { BarDB } from './bar-db'
 
 // usefull for managing pointer ID values that can be nullable
 import { NullInt64 } from './null-int64'
@@ -13,8 +13,8 @@ export class WaldoDB {
 	Name: string = ""
 
 	// insertion point for other declarations
-	Foo_WaldosDBID: NullInt64 = new NullInt64
-	Foo_WaldosDBID_Index: NullInt64  = new NullInt64 // store the index of the waldo instance in Foo.Waldos
-	Foo_Waldos_reverse?: FooDB 
+	Bar_WaldosDBID: NullInt64 = new NullInt64
+	Bar_WaldosDBID_Index: NullInt64  = new NullInt64 // store the index of the waldo instance in Bar.Waldos
+	Bar_Waldos_reverse?: BarDB 
 
 }

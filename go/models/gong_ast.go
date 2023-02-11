@@ -307,7 +307,7 @@ func ParseAstFileFromAst(inFile *ast.File, fset *token.FileSet) error {
 var __gong__map_Indentifiers_gongstructName = make(map[string]string)
 
 // insertion point for identifiers maps
-var __gong__map_Foo = make(map[string]*Foo)
+var __gong__map_Bar = make(map[string]*Bar)
 var __gong__map_Waldo = make(map[string]*Waldo)
 
 // Parser needs to be configured for having the [Name1.Name2] or [pkg.Name1] ...
@@ -484,10 +484,10 @@ func UnmarshallGongstructStaging(cmap *ast.CommentMap, assignStmt *ast.AssignStm
 									// this is the place where an instance is created
 									switch gongstructName {
 									// insertion point for identifiers
-									case "Foo":
-										instanceFoo := (&Foo{Name: instanceName}).Stage()
-										instance = any(instanceFoo)
-										__gong__map_Foo[identifier] = instanceFoo
+									case "Bar":
+										instanceBar := (&Bar{Name: instanceName}).Stage()
+										instance = any(instanceBar)
+										__gong__map_Bar[identifier] = instanceBar
 									case "Waldo":
 										instanceWaldo := (&Waldo{Name: instanceName}).Stage()
 										instance = any(instanceWaldo)
@@ -528,7 +528,7 @@ func UnmarshallGongstructStaging(cmap *ast.CommentMap, assignStmt *ast.AssignStm
 						}
 						switch gongstructName {
 						// insertion point for basic lit assignments
-						case "Foo":
+						case "Bar":
 							switch fieldName {
 							// insertion point for date assign code
 							}
@@ -561,15 +561,15 @@ func UnmarshallGongstructStaging(cmap *ast.CommentMap, assignStmt *ast.AssignStm
 					}
 					switch gongstructName {
 					// insertion point for slice of pointers assignments
-					case "Foo":
+					case "Bar":
 						switch fieldName {
 						// insertion point for slice of pointers assign code
 						case "Waldos":
 							// remove first and last char
 							targetIdentifier := ident.Name
 							target := __gong__map_Waldo[targetIdentifier]
-							__gong__map_Foo[identifier].Waldos =
-								append(__gong__map_Foo[identifier].Waldos, target)
+							__gong__map_Bar[identifier].Waldos =
+								append(__gong__map_Bar[identifier].Waldos, target)
 						}
 					case "Waldo":
 						switch fieldName {
@@ -611,13 +611,13 @@ func UnmarshallGongstructStaging(cmap *ast.CommentMap, assignStmt *ast.AssignStm
 
 			switch gongstructName {
 			// insertion point for basic lit assignments
-			case "Foo":
+			case "Bar":
 				switch fieldName {
 				// insertion point for field dependant code
 				case "Name":
 					// remove first and last char
 					fielValue := basicLit.Value[1 : len(basicLit.Value)-1]
-					__gong__map_Foo[identifier].Name = fielValue
+					__gong__map_Bar[identifier].Name = fielValue
 				}
 			case "Waldo":
 				switch fieldName {
@@ -641,7 +641,7 @@ func UnmarshallGongstructStaging(cmap *ast.CommentMap, assignStmt *ast.AssignStm
 			}
 			switch gongstructName {
 			// insertion point for bool & pointers assignments
-			case "Foo":
+			case "Bar":
 				switch fieldName {
 				// insertion point for field dependant code
 				}
@@ -677,7 +677,7 @@ func UnmarshallGongstructStaging(cmap *ast.CommentMap, assignStmt *ast.AssignStm
 				_ = enumValue
 				switch gongstructName {
 				// insertion point for enums assignments
-				case "Foo":
+				case "Bar":
 					switch fieldName {
 					// insertion point for enum assign code
 					}

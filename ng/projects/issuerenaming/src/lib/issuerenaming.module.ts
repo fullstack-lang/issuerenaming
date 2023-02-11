@@ -39,9 +39,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { GongstructSelectionService } from './gongstruct-selection.service'
 
 // insertion point for imports 
-import { FoosTableComponent } from './foos-table/foos-table.component'
-import { FooSortingComponent } from './foo-sorting/foo-sorting.component'
-import { FooDetailComponent } from './foo-detail/foo-detail.component'
+import { BarsTableComponent } from './bars-table/bars-table.component'
+import { BarSortingComponent } from './bar-sorting/bar-sorting.component'
+import { BarDetailComponent } from './bar-detail/bar-detail.component'
 
 import { WaldosTableComponent } from './waldos-table/waldos-table.component'
 import { WaldoSortingComponent } from './waldo-sorting/waldo-sorting.component'
@@ -51,9 +51,9 @@ import { WaldoDetailComponent } from './waldo-detail/waldo-detail.component'
 @NgModule({
 	declarations: [
 		// insertion point for declarations 
-		FoosTableComponent,
-		FooSortingComponent,
-		FooDetailComponent,
+		BarsTableComponent,
+		BarSortingComponent,
+		BarDetailComponent,
 
 		WaldosTableComponent,
 		WaldoSortingComponent,
@@ -98,9 +98,9 @@ import { WaldoDetailComponent } from './waldo-detail/waldo-detail.component'
 	],
 	exports: [
 		// insertion point for declarations 
-		FoosTableComponent,
-		FooSortingComponent,
-		FooDetailComponent,
+		BarsTableComponent,
+		BarSortingComponent,
+		BarDetailComponent,
 
 		WaldosTableComponent,
 		WaldoSortingComponent,

@@ -14,8 +14,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 const allowMultiSelect = true;
 
 import { Router, RouterState } from '@angular/router';
-import { FooDB } from '../foo-db'
-import { FooService } from '../foo.service'
+import { BarDB } from '../bar-db'
+import { BarService } from '../bar.service'
 
 // insertion point for additional imports
 
@@ -29,24 +29,24 @@ enum TableComponentMode {
 
 // generated table component
 @Component({
-  selector: 'app-foostable',
-  templateUrl: './foos-table.component.html',
-  styleUrls: ['./foos-table.component.css'],
+  selector: 'app-barstable',
+  templateUrl: './bars-table.component.html',
+  styleUrls: ['./bars-table.component.css'],
 })
-export class FoosTableComponent implements OnInit {
+export class BarsTableComponent implements OnInit {
 
   // mode at invocation
   mode: TableComponentMode = TableComponentMode.DISPLAY_MODE
 
-  // used if the component is called as a selection component of Foo instances
-  selection: SelectionModel<FooDB> = new (SelectionModel)
-  initialSelection = new Array<FooDB>()
+  // used if the component is called as a selection component of Bar instances
+  selection: SelectionModel<BarDB> = new (SelectionModel)
+  initialSelection = new Array<BarDB>()
 
   // the data source for the table
-  foos: FooDB[] = []
-  matTableDataSource: MatTableDataSource<FooDB> = new (MatTableDataSource)
+  bars: BarDB[] = []
+  matTableDataSource: MatTableDataSource<BarDB> = new (MatTableDataSource)
 
-  // front repo, that will be referenced by this.foos
+  // front repo, that will be referenced by this.bars
   frontRepo: FrontRepo = new (FrontRepo)
 
   // displayedColumns is referenced by the MatTable component for specify what columns
@@ -62,14 +62,14 @@ export class FoosTableComponent implements OnInit {
   ngAfterViewInit() {
 
     // enable sorting on all fields (including pointers and reverse pointer)
-    this.matTableDataSource.sortingDataAccessor = (fooDB: FooDB, property: string) => {
+    this.matTableDataSource.sortingDataAccessor = (barDB: BarDB, property: string) => {
       switch (property) {
         case 'ID':
-          return fooDB.ID
+          return barDB.ID
 
         // insertion point for specific sorting accessor
         case 'Name':
-          return fooDB.Name;
+          return barDB.Name;
 
         default:
           console.assert(false, "Unknown field")
@@ -78,14 +78,14 @@ export class FoosTableComponent implements OnInit {
     };
 
     // enable filtering on all fields (including pointers and reverse pointer, which is not done by default)
-    this.matTableDataSource.filterPredicate = (fooDB: FooDB, filter: string) => {
+    this.matTableDataSource.filterPredicate = (barDB: BarDB, filter: string) => {
 
       // filtering is based on finding a lower case filter into a concatenated string
-      // the fooDB properties
+      // the barDB properties
       let mergedContent = ""
 
       // insertion point for merging of fields
-      mergedContent += fooDB.Name.toLowerCase()
+      mergedContent += barDB.Name.toLowerCase()
 
       let isSelected = mergedContent.includes(filter.toLowerCase())
       return isSelected
@@ -101,11 +101,11 @@ export class FoosTableComponent implements OnInit {
   }
 
   constructor(
-    private fooService: FooService,
+    private barService: BarService,
     private frontRepoService: FrontRepoService,
 
-    // not null if the component is called as a selection component of foo instances
-    public dialogRef: MatDialogRef<FoosTableComponent>,
+    // not null if the component is called as a selection component of bar instances
+    public dialogRef: MatDialogRef<BarsTableComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: DialogData,
 
     private router: Router,
@@ -127,10 +127,10 @@ export class FoosTableComponent implements OnInit {
     }
 
     // observable for changes in structs
-    this.fooService.FooServiceChanged.subscribe(
+    this.barService.BarServiceChanged.subscribe(
       message => {
         if (message == "post" || message == "update" || message == "delete") {
-          this.getFoos()
+          this.getBars()
         }
       }
     )
@@ -142,88 +142,88 @@ export class FoosTableComponent implements OnInit {
       this.displayedColumns = ['select', 'ID', // insertion point for columns to display
         "Name",
       ]
-      this.selection = new SelectionModel<FooDB>(allowMultiSelect, this.initialSelection);
+      this.selection = new SelectionModel<BarDB>(allowMultiSelect, this.initialSelection);
     }
 
   }
 
   ngOnInit(): void {
-    this.getFoos()
-    this.matTableDataSource = new MatTableDataSource(this.foos)
+    this.getBars()
+    this.matTableDataSource = new MatTableDataSource(this.bars)
   }
 
-  getFoos(): void {
+  getBars(): void {
     this.frontRepoService.pull().subscribe(
       frontRepo => {
         this.frontRepo = frontRepo
 
-        this.foos = this.frontRepo.Foos_array;
+        this.bars = this.frontRepo.Bars_array;
 
         // insertion point for time duration Recoveries
         // insertion point for enum int Recoveries
         
         // in case the component is called as a selection component
         if (this.mode == TableComponentMode.ONE_MANY_ASSOCIATION_MODE) {
-          for (let foo of this.foos) {
+          for (let bar of this.bars) {
             let ID = this.dialogData.ID
-            let revPointer = foo[this.dialogData.ReversePointer as keyof FooDB] as unknown as NullInt64
+            let revPointer = bar[this.dialogData.ReversePointer as keyof BarDB] as unknown as NullInt64
             if (revPointer.Int64 == ID) {
-              this.initialSelection.push(foo)
+              this.initialSelection.push(bar)
             }
-            this.selection = new SelectionModel<FooDB>(allowMultiSelect, this.initialSelection);
+            this.selection = new SelectionModel<BarDB>(allowMultiSelect, this.initialSelection);
           }
         }
 
         if (this.mode == TableComponentMode.MANY_MANY_ASSOCIATION_MODE) {
 
-          let mapOfSourceInstances = this.frontRepo[this.dialogData.SourceStruct + "s" as keyof FrontRepo] as Map<number, FooDB>
+          let mapOfSourceInstances = this.frontRepo[this.dialogData.SourceStruct + "s" as keyof FrontRepo] as Map<number, BarDB>
           let sourceInstance = mapOfSourceInstances.get(this.dialogData.ID)!
 
-          let sourceField = sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance]! as unknown as FooDB[]
+          let sourceField = sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance]! as unknown as BarDB[]
           for (let associationInstance of sourceField) {
-            let foo = associationInstance[this.dialogData.IntermediateStructField as keyof typeof associationInstance] as unknown as FooDB
-            this.initialSelection.push(foo)
+            let bar = associationInstance[this.dialogData.IntermediateStructField as keyof typeof associationInstance] as unknown as BarDB
+            this.initialSelection.push(bar)
           }
 
-          this.selection = new SelectionModel<FooDB>(allowMultiSelect, this.initialSelection);
+          this.selection = new SelectionModel<BarDB>(allowMultiSelect, this.initialSelection);
         }
 
         // update the mat table data source
-        this.matTableDataSource.data = this.foos
+        this.matTableDataSource.data = this.bars
       }
     )
   }
 
-  // newFoo initiate a new foo
-  // create a new Foo objet
-  newFoo() {
+  // newBar initiate a new bar
+  // create a new Bar objet
+  newBar() {
   }
 
-  deleteFoo(fooID: number, foo: FooDB) {
-    // list of foos is truncated of foo before the delete
-    this.foos = this.foos.filter(h => h !== foo);
+  deleteBar(barID: number, bar: BarDB) {
+    // list of bars is truncated of bar before the delete
+    this.bars = this.bars.filter(h => h !== bar);
 
-    this.fooService.deleteFoo(fooID).subscribe(
-      foo => {
-        this.fooService.FooServiceChanged.next("delete")
+    this.barService.deleteBar(barID).subscribe(
+      bar => {
+        this.barService.BarServiceChanged.next("delete")
       }
     );
   }
 
-  editFoo(fooID: number, foo: FooDB) {
+  editBar(barID: number, bar: BarDB) {
 
   }
 
-  // display foo in router
-  displayFooInRouter(fooID: number) {
-    this.router.navigate(["github_com_fullstack_lang_issuerenaming_go-" + "foo-display", fooID])
+  // display bar in router
+  displayBarInRouter(barID: number) {
+    this.router.navigate(["github_com_fullstack_lang_issuerenaming_go-" + "bar-display", barID])
   }
 
   // set editor outlet
-  setEditorRouterOutlet(fooID: number) {
+  setEditorRouterOutlet(barID: number) {
     this.router.navigate([{
       outlets: {
-        github_com_fullstack_lang_issuerenaming_go_editor: ["github_com_fullstack_lang_issuerenaming_go-" + "foo-detail", fooID]
+        github_com_fullstack_lang_issuerenaming_go_editor: ["github_com_fullstack_lang_issuerenaming_go-" + "bar-detail", barID]
       }
     }]);
   }
@@ -231,7 +231,7 @@ export class FoosTableComponent implements OnInit {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.foos.length;
+    const numRows = this.bars.length;
     return numSelected === numRows;
   }
 
@@ -239,39 +239,39 @@ export class FoosTableComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.foos.forEach(row => this.selection.select(row));
+      this.bars.forEach(row => this.selection.select(row));
   }
 
   save() {
 
     if (this.mode == TableComponentMode.ONE_MANY_ASSOCIATION_MODE) {
 
-      let toUpdate = new Set<FooDB>()
+      let toUpdate = new Set<BarDB>()
 
-      // reset all initial selection of foo that belong to foo
-      for (let foo of this.initialSelection) {
-        let index = foo[this.dialogData.ReversePointer as keyof FooDB] as unknown as NullInt64
+      // reset all initial selection of bar that belong to bar
+      for (let bar of this.initialSelection) {
+        let index = bar[this.dialogData.ReversePointer as keyof BarDB] as unknown as NullInt64
         index.Int64 = 0
         index.Valid = true
-        toUpdate.add(foo)
+        toUpdate.add(bar)
 
       }
 
-      // from selection, set foo that belong to foo
-      for (let foo of this.selection.selected) {
+      // from selection, set bar that belong to bar
+      for (let bar of this.selection.selected) {
         let ID = this.dialogData.ID as number
-        let reversePointer = foo[this.dialogData.ReversePointer as keyof FooDB] as unknown as NullInt64
+        let reversePointer = bar[this.dialogData.ReversePointer as keyof BarDB] as unknown as NullInt64
         reversePointer.Int64 = ID
         reversePointer.Valid = true
-        toUpdate.add(foo)
+        toUpdate.add(bar)
       }
 
 
-      // update all foo (only update selection & initial selection)
-      for (let foo of toUpdate) {
-        this.fooService.updateFoo(foo)
-          .subscribe(foo => {
-            this.fooService.FooServiceChanged.next("update")
+      // update all bar (only update selection & initial selection)
+      for (let bar of toUpdate) {
+        this.barService.updateBar(bar)
+          .subscribe(bar => {
+            this.barService.BarServiceChanged.next("update")
           });
       }
     }
@@ -279,26 +279,26 @@ export class FoosTableComponent implements OnInit {
     if (this.mode == TableComponentMode.MANY_MANY_ASSOCIATION_MODE) {
 
       // get the source instance via the map of instances in the front repo
-      let mapOfSourceInstances = this.frontRepo[this.dialogData.SourceStruct + "s" as keyof FrontRepo] as Map<number, FooDB>
+      let mapOfSourceInstances = this.frontRepo[this.dialogData.SourceStruct + "s" as keyof FrontRepo] as Map<number, BarDB>
       let sourceInstance = mapOfSourceInstances.get(this.dialogData.ID)!
 
       // First, parse all instance of the association struct and remove the instance
       // that have unselect
-      let unselectedFoo = new Set<number>()
-      for (let foo of this.initialSelection) {
-        if (this.selection.selected.includes(foo)) {
-          // console.log("foo " + foo.Name + " is still selected")
+      let unselectedBar = new Set<number>()
+      for (let bar of this.initialSelection) {
+        if (this.selection.selected.includes(bar)) {
+          // console.log("bar " + bar.Name + " is still selected")
         } else {
-          console.log("foo " + foo.Name + " has been unselected")
-          unselectedFoo.add(foo.ID)
-          console.log("is unselected " + unselectedFoo.has(foo.ID))
+          console.log("bar " + bar.Name + " has been unselected")
+          unselectedBar.add(bar.ID)
+          console.log("is unselected " + unselectedBar.has(bar.ID))
         }
       }
 
       // delete the association instance
       let associationInstance = sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance]
-      let foo = associationInstance![this.dialogData.IntermediateStructField as keyof typeof associationInstance] as unknown as FooDB
-      if (unselectedFoo.has(foo.ID)) {
+      let bar = associationInstance![this.dialogData.IntermediateStructField as keyof typeof associationInstance] as unknown as BarDB
+      if (unselectedBar.has(bar.ID)) {
         this.frontRepoService.deleteService(this.dialogData.IntermediateStruct, associationInstance)
 
 
@@ -306,38 +306,38 @@ export class FoosTableComponent implements OnInit {
 
       // is the source array is empty create it
       if (sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance] == undefined) {
-        (sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance] as unknown as Array<FooDB>) = new Array<FooDB>()
+        (sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance] as unknown as Array<BarDB>) = new Array<BarDB>()
       }
 
       // second, parse all instance of the selected
       if (sourceInstance[this.dialogData.SourceField as keyof typeof sourceInstance]) {
         this.selection.selected.forEach(
-          foo => {
-            if (!this.initialSelection.includes(foo)) {
-              // console.log("foo " + foo.Name + " has been added to the selection")
+          bar => {
+            if (!this.initialSelection.includes(bar)) {
+              // console.log("bar " + bar.Name + " has been added to the selection")
 
               let associationInstance = {
-                Name: sourceInstance["Name"] + "-" + foo.Name,
+                Name: sourceInstance["Name"] + "-" + bar.Name,
               }
 
               let index = associationInstance[this.dialogData.IntermediateStructField + "ID" as keyof typeof associationInstance] as unknown as NullInt64
-              index.Int64 = foo.ID
+              index.Int64 = bar.ID
               index.Valid = true
 
               let indexDB = associationInstance[this.dialogData.IntermediateStructField + "DBID" as keyof typeof associationInstance] as unknown as NullInt64
-              indexDB.Int64 = foo.ID
+              indexDB.Int64 = bar.ID
               index.Valid = true
 
               this.frontRepoService.postService(this.dialogData.IntermediateStruct, associationInstance)
 
             } else {
-              // console.log("foo " + foo.Name + " is still selected")
+              // console.log("bar " + bar.Name + " is still selected")
             }
           }
         )
       }
 
-      // this.selection = new SelectionModel<FooDB>(allowMultiSelect, this.initialSelection);
+      // this.selection = new SelectionModel<BarDB>(allowMultiSelect, this.initialSelection);
     }
 
     // why pizza ?

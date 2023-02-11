@@ -5,9 +5,9 @@ func AfterCreateFromFront[Type Gongstruct](stage *StageStruct, instance *Type) {
 
 	switch target := any(instance).(type) {
 	// insertion point
-	case *Foo:
-		if stage.OnAfterFooCreateCallback != nil {
-			stage.OnAfterFooCreateCallback.OnAfterCreate(stage, target)
+	case *Bar:
+		if stage.OnAfterBarCreateCallback != nil {
+			stage.OnAfterBarCreateCallback.OnAfterCreate(stage, target)
 		}
 	case *Waldo:
 		if stage.OnAfterWaldoCreateCallback != nil {
@@ -21,10 +21,10 @@ func AfterUpdateFromFront[Type Gongstruct](stage *StageStruct, old, new *Type) {
 
 	switch oldTarget := any(old).(type) {
 	// insertion point
-	case *Foo:
-		newTarget := any(new).(*Foo)
-		if stage.OnAfterFooUpdateCallback != nil {
-			stage.OnAfterFooUpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
+	case *Bar:
+		newTarget := any(new).(*Bar)
+		if stage.OnAfterBarUpdateCallback != nil {
+			stage.OnAfterBarUpdateCallback.OnAfterUpdate(stage, oldTarget, newTarget)
 		}
 	case *Waldo:
 		newTarget := any(new).(*Waldo)
@@ -39,10 +39,10 @@ func AfterDeleteFromFront[Type Gongstruct](stage *StageStruct, staged, front *Ty
 
 	switch front := any(front).(type) {
 	// insertion point
-	case *Foo:
-		if stage.OnAfterFooDeleteCallback != nil {
-			staged := any(staged).(*Foo)
-			stage.OnAfterFooDeleteCallback.OnAfterDelete(stage, staged, front)
+	case *Bar:
+		if stage.OnAfterBarDeleteCallback != nil {
+			staged := any(staged).(*Bar)
+			stage.OnAfterBarDeleteCallback.OnAfterDelete(stage, staged, front)
 		}
 	case *Waldo:
 		if stage.OnAfterWaldoDeleteCallback != nil {
@@ -57,9 +57,9 @@ func AfterReadFromFront[Type Gongstruct](stage *StageStruct, instance *Type) {
 
 	switch target := any(instance).(type) {
 	// insertion point
-	case *Foo:
-		if stage.OnAfterFooReadCallback != nil {
-			stage.OnAfterFooReadCallback.OnAfterRead(stage, target)
+	case *Bar:
+		if stage.OnAfterBarReadCallback != nil {
+			stage.OnAfterBarReadCallback.OnAfterRead(stage, target)
 		}
 	case *Waldo:
 		if stage.OnAfterWaldoReadCallback != nil {
@@ -74,8 +74,8 @@ func SetCallbackAfterUpdateFromFront[Type Gongstruct](stage *StageStruct, callba
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Foo:
-		stage.OnAfterFooUpdateCallback = any(callback).(OnAfterUpdateInterface[Foo])
+	case *Bar:
+		stage.OnAfterBarUpdateCallback = any(callback).(OnAfterUpdateInterface[Bar])
 	
 	case *Waldo:
 		stage.OnAfterWaldoUpdateCallback = any(callback).(OnAfterUpdateInterface[Waldo])
@@ -87,8 +87,8 @@ func SetCallbackAfterCreateFromFront[Type Gongstruct](stage *StageStruct, callba
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Foo:
-		stage.OnAfterFooCreateCallback = any(callback).(OnAfterCreateInterface[Foo])
+	case *Bar:
+		stage.OnAfterBarCreateCallback = any(callback).(OnAfterCreateInterface[Bar])
 	
 	case *Waldo:
 		stage.OnAfterWaldoCreateCallback = any(callback).(OnAfterCreateInterface[Waldo])
@@ -100,8 +100,8 @@ func SetCallbackAfterDeleteFromFront[Type Gongstruct](stage *StageStruct, callba
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Foo:
-		stage.OnAfterFooDeleteCallback = any(callback).(OnAfterDeleteInterface[Foo])
+	case *Bar:
+		stage.OnAfterBarDeleteCallback = any(callback).(OnAfterDeleteInterface[Bar])
 	
 	case *Waldo:
 		stage.OnAfterWaldoDeleteCallback = any(callback).(OnAfterDeleteInterface[Waldo])
@@ -113,8 +113,8 @@ func SetCallbackAfterReadFromFront[Type Gongstruct](stage *StageStruct, callback
 	var instance Type
 	switch any(instance).(type) {
 		// insertion point
-	case *Foo:
-		stage.OnAfterFooReadCallback = any(callback).(OnAfterReadInterface[Foo])
+	case *Bar:
+		stage.OnAfterBarReadCallback = any(callback).(OnAfterReadInterface[Bar])
 	
 	case *Waldo:
 		stage.OnAfterWaldoReadCallback = any(callback).(OnAfterReadInterface[Waldo])

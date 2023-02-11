@@ -1,12 +1,12 @@
 // insertion point sub template for components imports 
-  import { FoosTableComponent } from './foos-table/foos-table.component'
-  import { FooSortingComponent } from './foo-sorting/foo-sorting.component'
+  import { BarsTableComponent } from './bars-table/bars-table.component'
+  import { BarSortingComponent } from './bar-sorting/bar-sorting.component'
   import { WaldosTableComponent } from './waldos-table/waldos-table.component'
   import { WaldoSortingComponent } from './waldo-sorting/waldo-sorting.component'
 
 // insertion point sub template for map of components per struct 
-  export const MapOfFoosComponents: Map<string, any> = new Map([["FoosTableComponent", FoosTableComponent],])
-  export const MapOfFooSortingComponents: Map<string, any> = new Map([["FooSortingComponent", FooSortingComponent],])
+  export const MapOfBarsComponents: Map<string, any> = new Map([["BarsTableComponent", BarsTableComponent],])
+  export const MapOfBarSortingComponents: Map<string, any> = new Map([["BarSortingComponent", BarSortingComponent],])
   export const MapOfWaldosComponents: Map<string, any> = new Map([["WaldosTableComponent", WaldosTableComponent],])
   export const MapOfWaldoSortingComponents: Map<string, any> = new Map([["WaldoSortingComponent", WaldoSortingComponent],])
 
@@ -15,7 +15,7 @@ export const MapOfComponents: Map<string, any> =
   new Map(
     [
       // insertion point sub template for map of components 
-      ["Foo", MapOfFoosComponents],
+      ["Bar", MapOfBarsComponents],
       ["Waldo", MapOfWaldosComponents],
     ]
   )
@@ -25,7 +25,7 @@ export const MapOfSortingComponents: Map<string, any> =
   new Map(
     [
     // insertion point sub template for map of sorting components 
-      ["Foo", MapOfFooSortingComponents],
+      ["Bar", MapOfBarSortingComponents],
       ["Waldo", MapOfWaldoSortingComponents],
     ]
   )
