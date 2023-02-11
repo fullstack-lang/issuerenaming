@@ -53,7 +53,10 @@ type Foo struct {
 
 select `Foo` and rename it `Bar`
 
+check the diffs in stage.go & NewDiagram.go
 ## Re generation and running the application after renaming Foo to Bar
+
+You can regenerate the application or switch to branch "afterrenaming"
 
 ```
 go install github.com/fullstack-lang/gong/go/cmd/gongc@issuerenaming
@@ -61,3 +64,10 @@ gongc go/models
 cd go/cmd/issuerenaming
 ./issuerenaming -unmarshallFromCode=stage.go -marshallOnCommit=stage 
 ```
+
+navigate to the UML diagram.
+
+<img width="762" alt="Screenshot 2023-02-09 at 08 14 49" src="./UML diagram after renaming.png">
+
+Thanks to the workaround, the UML diagram has been preserved. The workaround cannot deal 
+with doc link in comment, therefore both note links with "Foo" in their identifier have been lost.
